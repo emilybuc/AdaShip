@@ -53,9 +53,9 @@ class controller {
 		}
 
     void setBoard(int x, int y){
-      for(int xAxis = 0; xAxis <= x; xAxis++){
+      for(int xAxis = 0; xAxis <= x - 1; xAxis++){
         vector<tile>temp;
-        for(int yAxis = 0; yAxis <= y; yAxis++){
+        for(int yAxis = 0; yAxis <= y - 1; yAxis++){
           // cout << "x =" << xAxis << endl;
           temp.push_back({false, false, false});
         }
