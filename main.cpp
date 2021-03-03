@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>//This allows my file to access a filestream
+#include <string>
 #include "Configuration.h"
 using namespace std;
 
@@ -7,12 +8,12 @@ void menu(void);
 bool isNo(string input);
 
 int main() {
-  Configuration newConfig;
   menu();
   return 0;
 }
 
 void menu(void) {
+  Configuration newConfig;
 	string choice = "-1"; //declare and initialise an integer type variable
 	do { //set up a continuous loop
 		cout << "\nAdaShip! not like battleships in anyway:\n";
@@ -26,7 +27,7 @@ void menu(void) {
       int choiceInt = stoi(choice);
       //Had to change the input because using cin and getline in the same application was causing bugs
       switch(choiceInt) {
-        // case 1: newConfig.getBoard(); break;
+        case 1: newConfig.getBoard(); break;
         case 0: cout << "Exiting"; break;
         default:
           cout << "\n'" << choice << "' Is an invalid option  - please try again.";
