@@ -12,7 +12,7 @@ struct boat {
 };
 struct tile {
   bool hit;
-  bool hasShip;
+  char hasShip;
   bool hasMine;
 };
 
