@@ -8,4 +8,5 @@ void OneVsComp(){
   bool gameStarted = true;
   boardClass playersBoard;
   playersBoard.outputPlayersBoard(gameStarted, false);
+  playersBoard.setShips();
 }

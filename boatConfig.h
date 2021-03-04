@@ -1,6 +1,5 @@
 #pragma once
 
-
 class boatClass {
   private: 
     vector <boat> boats;
@@ -27,7 +26,7 @@ class boatClass {
   
   void listBoats() {
     for (int i = 0; i < boats.size(); i++ ) {	//loop through each boat		
-      std::cout << "\nBoat " << i << ": " << boats[i].name << " (" << boats[i].size << ")";
+      std::cout << "\nBoat " << i + 1 << ": " << boats[i].name << " (" << boats[i].size << ")";
     }
   }
   void addBoat(string name, int size) {
@@ -46,4 +45,7 @@ class boatClass {
     }
   return -1; //return invalid index as no match found
 }
+ vector <boat> getBoats(){
+   return boats;
+ }
 };

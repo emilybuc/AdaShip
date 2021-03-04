@@ -66,6 +66,13 @@ class boardClass {
       }
     }
     void setShips(){
-
+      boatClass gameBoatsClass;
+      vector <boat> boatList = gameBoatsClass.getBoats();
+      for (int i = 0; i < boatList.size(); i++){
+        string choice;
+        gameBoatsClass.listBoats();
+        cout << endl << "Please choose where you want to place Boat "<< i + 1 << ":\n";
+        getline(cin, choice);
+      }
     }
 };
