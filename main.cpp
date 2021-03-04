@@ -3,10 +3,16 @@
 #include <sstream>
 #include <string>
 using namespace std;
-#include "game.h"
 
+int getIntFromFile(stringstream& lineStream, char delimiter);
 void menu(void);
 bool isNo(string input);
+
+
+//Header files
+#include "game.h"
+
+
 
 int main() {
   menu();
@@ -53,4 +59,11 @@ bool isNo(string input){
     } 
   }
   return true;
+}
+
+int getIntFromFile(stringstream& lineStream, char delimiter){
+  string value;
+  getline(lineStream, value, delimiter);
+  int convertedToInt = stoi(value);
+  return convertedToInt;
 }

@@ -1,14 +1,11 @@
 #pragma once
 #include "config.h"
 #include "board.h"
+#include "boatConfig.h"
+int getIntFromFile(stringstream& lineStream, char delimiter);
 
 void OneVsComp(){
-  controller newGame;
-  newGame.getConfigBoats();
   bool gameStarted = true;
-  int* boardCoordinates = newGame.getConfigBoard();
-  boardClass playersBoard(boardCoordinates[0], boardCoordinates[1]);
+  boardClass playersBoard;
   playersBoard.outputPlayersBoard(gameStarted, false);
-  // vector<vector<tile>> board1 = newGame.getBoard();
-
 }

@@ -1,14 +1,17 @@
 #pragma once
 #include <iomanip>
+#include "boatConfig.h"
 
 class boardClass {
   private:
     vector<vector<tile>> board;
+    int boardCoordinates[2];
   public:
-    boardClass(int x, int y){
-      for(int xAxis = 0; xAxis <= x - 1; xAxis++){
+    boardClass(){
+      getConfigBoard();
+      for(int xAxis = 0; xAxis <= boardCoordinates[0] - 1; xAxis++){
         vector<tile>temp;
-        for(int yAxis = 0; yAxis <= y - 1; yAxis++){
+        for(int yAxis = 0; yAxis <= boardCoordinates[1] - 1; yAxis++){
           temp.push_back({false, false, false});
         }
         board.push_back(temp);
@@ -19,7 +22,25 @@ class boardClass {
       //   }
       // }
     }
-    
+    void getConfigBoard() {
+			ifstream config;
+      config.open("adaship_config.ini");
+        if (config.is_open()){
+        string line;
+        while( getline(config,line)){
+          stringstream configStrStream(line);
+          string lineType;
+          getline(configStrStream, lineType, ':');
+          if(lineType == "Board"){
+            int x = getIntFromFile(configStrStream, 'x');
+            int y = getIntFromFile(configStrStream, 'x');
+            boardCoordinates[0] = x;
+            boardCoordinates[1] = y;
+          }
+        }
+      }
+			config.close();
+		}
     void outputPlayersBoard(bool gameStarted, bool playersBoard){
       // board[0][0].hasShip = 'B';
       for (char letter = 'A'; letter <= 'J'; letter++){
@@ -40,8 +61,11 @@ class boardClass {
           } else if(!board[i][j].hit){
             cout << setw(4) << " |" ;
           } 
-      }
+        }
       cout << endl;
+      }
     }
+    void setShips(){
+
     }
 };
