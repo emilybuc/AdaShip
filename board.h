@@ -6,6 +6,7 @@ class boardClass {
   private:
     vector<vector<tile>> board;
     int boardCoordinates[2];
+    int boatCoordinates[2];
   public:
     boardClass(){
       getConfigBoard();
@@ -73,6 +74,53 @@ class boardClass {
         gameBoatsClass.listBoats();
         cout << endl << "Please choose where you want to place Boat "<< i + 1 << ":\n";
         getline(cin, choice);
+        validateInput(choice);
+        // cout << boatCoordinates[0] << ", " << boatCoordinates[1];
       }
+    }
+    bool validateInput(string input){
+      int convertCharToCoord = 65;
+      int convertIntToCoord = 48;
+      int ten = 10;
+      for (int i = 0; i < input.size(); i++){
+        if(isalpha(input[i])){
+          cout << "in alpha";
+          int uppercaseChar = toupper(input[i]);
+          boatCoordinates[0] += (uppercaseChar - convertCharToCoord);
+          break;
+        } else if(isdigit(input[i])){
+          if(isdigit(input[i + 1])){
+            string value = to_string(input[i]);
+            int valueInt = stoi(value);
+            int minus48 = valueInt -= convertIntToCoord;
+            int finalNum = minus48 *= 10;
+
+
+            string value2 = to_string(input[i + 1]);
+            int valueInt2 = stoi(value2);
+            int minus482 = valueInt2 -= convertIntToCoord;
+            finalNum = finalNum + minus482;
+            cout << finalNum; 
+          }
+          // cout << "in digit";
+          // boardCoordinates[1] = input[i];
+          // cout << boardCoordinates[1];
+          break;
+        } else {
+          return false;
+        }
+      }
+      if(validateCoord(boardCoordinates)){
+        return true;
+      }
+      return false;
+    }
+    // int convertArrayToInt(int input){
+    //   string value = to_string(input[i]);
+    //   int valueInt = stoi(value);
+    //   int minus48 = valueInt -= 48;
+    // }
+    bool validateCoord(int* boatCoord){
+      return true;
     }
 };

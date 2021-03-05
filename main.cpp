@@ -11,6 +11,7 @@ bool isNo(string input);
 
 //Header files
 #include "game.h"
+#include "board.h"
 
 
 
@@ -50,10 +51,10 @@ bool isNo(string input){
   for (int i = input.length() - 1; i >= 0; i--){
     //looping through the string to find if its a digit, if it isnt then return false
     if(!isdigit(input[i])){
-      if(input[i] == '-' && i == 0){
-        return true;
-        //Checking if the first digit is a - (for a minus number)
-      }
+      // if(input[i] == '-' && i == 0){
+      //   return true;
+      //   //Checking if the first digit is a - (for a minus number)
+      // }
       return false;
       //if it isnt a digit then return 
     } 
