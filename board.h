@@ -75,7 +75,7 @@ class boardClass {
         cout << endl << "Please choose where you want to place Boat "<< i + 1 << ":\n";
         getline(cin, choice);
         validateInput(choice);
-        // cout << boatCoordinates[0] << ", " << boatCoordinates[1];
+        cout << boatCoordinates[0] << ", " << boatCoordinates[1];
       }
     }
     bool validateInput(string input){
@@ -84,28 +84,20 @@ class boardClass {
       int ten = 10;
       for (int i = 0; i < input.size(); i++){
         if(isalpha(input[i])){
-          cout << "in alpha";
           int uppercaseChar = toupper(input[i]);
           boatCoordinates[0] += (uppercaseChar - convertCharToCoord);
-          break;
         } else if(isdigit(input[i])){
           if(isdigit(input[i + 1])){
-            string value = to_string(input[i]);
-            int valueInt = stoi(value);
-            int minus48 = valueInt -= convertIntToCoord;
-            int finalNum = minus48 *= 10;
-
-
-            string value2 = to_string(input[i + 1]);
-            int valueInt2 = stoi(value2);
-            int minus482 = valueInt2 -= convertIntToCoord;
-            finalNum = finalNum + minus482;
-            cout << finalNum; 
+            int firstDigit = convertArrayToInt(input[i]) * 10;
+            int secondDigit = convertArrayToInt(input[i + 1]);
+            int finalNum = (firstDigit + secondDigit);
+            cout << finalNum << endl;
+            boatCoordinates[1] = finalNum;
+            break;
+          } else {
+            boatCoordinates[1] = convertArrayToInt(input[i]) - 1;
+            break;
           }
-          // cout << "in digit";
-          // boardCoordinates[1] = input[i];
-          // cout << boardCoordinates[1];
-          break;
         } else {
           return false;
         }
@@ -115,11 +107,13 @@ class boardClass {
       }
       return false;
     }
-    // int convertArrayToInt(int input){
-    //   string value = to_string(input[i]);
-    //   int valueInt = stoi(value);
-    //   int minus48 = valueInt -= 48;
-    // }
+    int convertArrayToInt(int input){
+      int convertToInt = 48;
+      string inputToString = to_string(input);
+      int inputInt = stoi(inputToString);
+      int convertFromAsciiToInt = inputInt -= convertToInt;
+      return convertFromAsciiToInt;
+    }
     bool validateCoord(int* boatCoord){
       return true;
     }
