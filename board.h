@@ -71,10 +71,15 @@ class boardClass {
       vector <boat> boatList = gameBoatsClass.getBoats();
       for (int i = 0; i < boatList.size(); i++){
         string choice;
+        cout << endl << "Please choose where you want to place Boat "<< i + 1 << "\n";
         gameBoatsClass.listBoats();
-        cout << endl << "Please choose where you want to place Boat "<< i + 1 << ":\n";
+        cout << "\n\n";
         getline(cin, choice);
-        validateInput(choice);
+        if(validateInput(choice)){
+          validateInput(choice);
+        } else {
+          cout << "Thats not a valid input, " << endl;
+        }
         cout << boatCoordinates[0] << ", " << boatCoordinates[1];
       }
     }
@@ -91,21 +96,23 @@ class boardClass {
             int firstDigit = convertArrayToInt(input[i]) * 10;
             int secondDigit = convertArrayToInt(input[i + 1]);
             int finalNum = (firstDigit + secondDigit);
-            cout << finalNum << endl;
-            boatCoordinates[1] = finalNum;
+            boatCoordinates[1] = finalNum - 1;
             break;
           } else {
             boatCoordinates[1] = convertArrayToInt(input[i]) - 1;
             break;
           }
         } else {
+          resetBoatCoord();
           return false;
         }
       }
-      if(validateCoord(boardCoordinates)){
+      if(validateCoord(boatCoordinates)){
         return true;
+      } else {
+        resetBoatCoord();
+        return false;
       }
-      return false;
     }
     int convertArrayToInt(int input){
       int convertToInt = 48;
@@ -115,6 +122,13 @@ class boardClass {
       return convertFromAsciiToInt;
     }
     bool validateCoord(int* boatCoord){
-      return true;
+      if(boatCoord[0] <= boardCoordinates[0] && boatCoord[1] <= boardCoordinates[1]){
+        return true;
+      }
+      return false;
+    }
+    void resetBoatCoord(){
+      boatCoordinates[0] = 0;
+      boatCoordinates[1] = 0;
     }
 };
