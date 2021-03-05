@@ -1,5 +1,6 @@
 #pragma once
 #include <iomanip>
+#include <math.h>       /* floor */
 #include "boatConfig.h"
 
 class boardClass {
@@ -37,35 +38,54 @@ class boardClass {
             int y = getIntFromFile(configStrStream, 'x');
             boardCoordinates[0] = x;
             boardCoordinates[1] = y;
+            // cout << boardCoordinates[0] << ", " << boardCoordinates[1];
           }
         }
       }
 			config.close();
 		}
     void outputPlayersBoard(bool gameStarted, bool playersBoard){
-      // board[0][0].hasShip = 'B';
-      for (char letter = 'A'; letter <= 'J'; letter++){
-        //change!! this for variable size
-        cout << setw(4) << letter;
+      //change function to output AA and BA etc doesnt work atm
+      cout << "  ";
+      int alpha = 26;
+      for (char letter = 'A'; letter <= boardCoordinates[1] + 64; letter++){
+        int variation = floor(letter / alpha);
+        // cout << letter << ", ";
+        // cout << "variation: " << variation;
+        // cout << letter / alpha;
+        if(variation == 2){
+          cout << "\t" << letter;
+        } else if (variation == 3){
+          char secondletter = letter - (variation * alpha);
+          cout << "\t" << "A" << secondletter;
+        } else if (variation == 4){
+          char secondletter = letter - (variation * alpha);
+          cout << "\t" << "B" << secondletter;
+        } else if (variation == 5){
+          char secondletter = letter - (variation * alpha);
+          cout << "\t" << "C" << secondletter;
+        }
       }
       cout << endl;
-      for (int i =0; i < board.size(); i++){
+
+      for (int i = 0; i < board.size(); i++){
         int rowNumbers = i + 1;
         cout << setw(2) << rowNumbers;
         for (int j = 0; j < board[i].size(); j++){
            if (board[i][j].hit){
-            cout << setw(2) << "H" << setw(2) << "|";
+            cout << setw(2) << "H" << setw(2);
           } else if (board[i][j].hasShip && playersBoard){
-            cout << setw(2) << board[i][j].hasShip << setw(2) << "|";
+            cout << setw(2) << board[i][j].hasShip << setw(2);
           } else if (board[i][j].hasMine == true && gameStarted == true){
-            cout << setw(2) << "M" << setw(2) << "|";
+            cout << setw(2) << "M" << setw(2);
           } else if(!board[i][j].hit){
-            cout << setw(4) << " |" ;
+            cout << "\t" << "-" ;
           } 
         }
       cout << endl;
       }
     }
+
     void setShips(){
       boatClass gameBoatsClass;
       vector <boat> boatList = gameBoatsClass.getBoats();
@@ -86,7 +106,6 @@ class boardClass {
     bool validateInput(string input){
       int convertCharToCoord = 65;
       int convertIntToCoord = 48;
-      int ten = 10;
       for (int i = 0; i < input.size(); i++){
         if(isalpha(input[i])){
           int uppercaseChar = toupper(input[i]);

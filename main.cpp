@@ -28,7 +28,7 @@ void menu(void) {
 
 		cout << "\n\t0. Quit\n";
 
-		cout << "\nPlease enter option to run primer (e.g. 1 for Primer 01): ";
+		cout << "\nPlease enter option to run that type of game: ";
     getline(cin, choice);
     if(isNo(choice)){
       int choiceInt = stoi(choice);
