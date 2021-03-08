@@ -7,7 +7,5 @@ int getIntFromFile(stringstream& lineStream, char delimiter);
 void OneVsComp(){
   bool gameStarted = true;
   boardClass playersBoard;
-  playersBoard.outputPlayersBoard(gameStarted, false);
-  
-  playersBoard.setShips();
+  playersBoard.setShipsMenu();
 }

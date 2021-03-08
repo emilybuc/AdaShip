@@ -17,6 +17,7 @@ bool isNo(string input);
 
 int main() {
   menu();
+  // OneVsComp();
   return 0;
 }
 
