@@ -123,7 +123,7 @@ class boardClass {
                   boatCoordinates[0] = rand() % boardCoordinates[0];
                   boatCoordinates[1] = rand() % boardCoordinates[1];
                   cout << "i = " << i << endl;
-                  if(autoSetShips(boatList[i]) == false){
+                  if(!autoSetShips(boatList[i])){
                     i--;
                   }
                 }
@@ -177,7 +177,6 @@ class boardClass {
 
     bool validateCoord(int* boatCoord){
       if(boatCoord[0] < boardCoordinates[0] && boatCoord[1] < boardCoordinates[1] && boatCoord[0] >= 0 && boatCoord[1] >= 0){
-        cout << "boatCoord inside validate: " <<boatCoord[0] << ", " << boatCoord[1] << endl;
         return true;
       }
       return false;
@@ -223,39 +222,36 @@ class boardClass {
     bool validateBoatPlacement(boat currentBoat, int movementOnXorY, int plusOrMinus1){
       int localBoatCoordinates[2] = { boatCoordinates[0], boatCoordinates[1] };
       for(int i = 0; i <= currentBoat.size - 1 ; i++){
-        if(tileHasShip(localBoatCoordinates[0], localBoatCoordinates[1]) == true ||validateCoord(localBoatCoordinates) == false){
-          cout <<"Local boat coords: " << localBoatCoordinates[0] << ", " << localBoatCoordinates[1] << endl;
+        if(!validateCoord(localBoatCoordinates)){
+          return false;
+        } else if(tileHasShip(localBoatCoordinates) == true){
+          cout << "tile has a ship" << endl;
           return false;
         } else {
-          cout <<"Local boat coords else: " << localBoatCoordinates[0] << ", " << localBoatCoordinates[1] << endl;
           localBoatCoordinates[movementOnXorY] += plusOrMinus1;
         }
-      } cout << "before for";
+      }
       for(int i = 0; i <= currentBoat.size - 1 ; i++){
         inputShipIntoCoordinate(currentBoat);
         boatCoordinates[movementOnXorY] += plusOrMinus1;
       }
       return true;
-    }
-// 
-    bool tileHasShip(int localBoatCoordinates1, int localBoatCoordinates2){
-      if(board[localBoatCoordinates2][localBoatCoordinates1].hasShip){
-        return true;
-      } else {
+    } 
+    bool tileHasShip(int* localBoatCoordinates){
+      if(!board[localBoatCoordinates[1]][localBoatCoordinates[0]].hasShip){
         return false;
+      } else {
+        return true;
       }
     }
     bool autoSetShips(boat currentBoat){
       int movementOnXorY = rand() % 2;
       int randomNumber = rand() % 4;
       int arrayWithPlusOrMinus1[4] = {-1, 1, 1,-1};
-
+      cout << movementOnXorY;
       int plusOrMinus1 = arrayWithPlusOrMinus1[randomNumber];
-      cout << boatCoordinates[0] << ", "<< boatCoordinates[1] << ", "<< randomNumber <<", " << plusOrMinus1 <<endl;
-      bool boatPlaced = validateBoatPlacement(currentBoat, movementOnXorY, plusOrMinus1);
-      cout << "boat placed: " << boatPlaced << endl;
-      if(boatPlaced == false){
-        cout << "potato" << endl;
+      
+      if(!validateBoatPlacement(currentBoat, movementOnXorY, -1)){
         resetBoatCoord();
         return false;
       } else {
@@ -266,6 +262,3 @@ class boardClass {
     }
 };
 
-
-/// [0] = y 
-/// [1] = x

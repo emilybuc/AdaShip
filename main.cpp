@@ -16,6 +16,7 @@ bool isNo(string input);
 
 
 int main() {
+  srand((unsigned) time(NULL));
   menu();
   // OneVsComp();
   return 0;
