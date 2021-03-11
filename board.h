@@ -127,7 +127,10 @@ class boardClass {
                     }
                     outputPlayersBoard(false, true);
                     input = yOrN();
-                    return;
+                    break;
+                } else if (option == "Q" || option == "q"){
+                  input = "0";
+                  break;
                 } else {
                     cout << "\n'" << option << "' Is an invalid option  - please try again.\n";
                     i--;
