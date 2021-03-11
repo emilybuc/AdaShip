@@ -37,8 +37,8 @@ class boardClass {
           if(lineType == "Board"){
             int x = getIntFromFile(configStrStream, 'x');
             int y = getIntFromFile(configStrStream, 'x');
-            boardCoordinates[0] = y;
-            boardCoordinates[1] = x;
+            boardCoordinates[0] = x;
+            boardCoordinates[1] = y;
           }
         }
       }
@@ -48,7 +48,7 @@ class boardClass {
       //change function to output AA and BA etc doesnt work atm
       cout << "  ";
       int alpha = 26;
-      for (char letter = 'A'; letter <= boardCoordinates[1] + 64; letter++){
+      for (char letter = 'A'; letter <= boardCoordinates[0] + 64; letter++){
         int variation = floor(letter / alpha);
         if(variation == 2){
           cout << "\t" << letter;
@@ -69,16 +69,17 @@ class boardClass {
         int rowNumbers = i + 1;
         cout << setw(2) << rowNumbers;
         for (int j = 0; j < board[i].size(); j++){
-           if (board[i][j].hit){
+           if (board[j][i].hit){
             cout << "\t" << "H";
-          } else if (board[i][j].hasShip && playersBoard){
-            cout <<"\t" << board[i][j].hasShip;
-          } else if (board[i][j].hasMine == true && gameStarted == true){
+          } else if (board[j][i].hasShip && playersBoard){
+            cout <<"\t" << board[j][i].hasShip;
+          } else if (board[j][i].hasMine == true && gameStarted == true){
             cout << "\t" << "M" << setw(2);
-          } else if(!board[i][j].hit){
+          } else if(!board[j][i].hit){
             cout << "\t" << "-" ;
           } 
         }
+        //Display an opposite way because the board is upside down
       cout << endl;
       }
     }
@@ -144,16 +145,16 @@ class boardClass {
       for (int i = 0; i < input.size(); i++){
         if(isalpha(input[i])){
           int uppercaseChar = toupper(input[i]);
-          boatCoordinates[1] += (uppercaseChar - convertCharToCoord);
+          boatCoordinates[0] += (uppercaseChar - convertCharToCoord);
         } else if(isdigit(input[i])){
           if(isdigit(input[i + 1])){
             int firstDigit = convertArrayToInt(input[i]) * 10;
             int secondDigit = convertArrayToInt(input[i + 1]);
             int finalNum = (firstDigit + secondDigit);
-            boatCoordinates[0] = finalNum - 1;
+            boatCoordinates[1] = finalNum - 1;
             break;
           } else {
-            boatCoordinates[0] = convertArrayToInt(input[i]) - 1;
+            boatCoordinates[1] = convertArrayToInt(input[i]) - 1;
           }
         } else {
           resetBoatCoord();
@@ -192,19 +193,18 @@ class boardClass {
 
     }
     int setShip(string direction, boat currentBoat){
-      int localBoatCoordinates[2] = { boatCoordinates[0], boatCoordinates[1] };
       bool successfulBoatPlacement;
       if (direction == "L" || direction == "l"){
-        successfulBoatPlacement = validateBoatPlacement(currentBoat, 1, -1);
-
-      } else if (direction == "R" || direction == "r"){
-        successfulBoatPlacement = validateBoatPlacement(currentBoat, 1, 1);
-
-      } else if (direction == "U" || direction == "u"){
         successfulBoatPlacement = validateBoatPlacement(currentBoat, 0, -1);
 
-      } else if (direction == "D" || direction == "d"){
+      } else if (direction == "R" || direction == "r"){
         successfulBoatPlacement = validateBoatPlacement(currentBoat, 0, 1);
+
+      } else if (direction == "U" || direction == "u"){
+        successfulBoatPlacement = validateBoatPlacement(currentBoat, 1, -1);
+
+      } else if (direction == "D" || direction == "d"){
+        successfulBoatPlacement = validateBoatPlacement(currentBoat, 1, 1);
 
       } else {
         cout << "The character you entered was incorrect, try again";
@@ -222,6 +222,7 @@ class boardClass {
     bool validateBoatPlacement(boat currentBoat, int movementOnXorY, int plusOrMinus1){
       int localBoatCoordinates[2] = { boatCoordinates[0], boatCoordinates[1] };
       for(int i = 0; i <= currentBoat.size - 1 ; i++){
+        cout << localBoatCoordinates[0] << ", " << localBoatCoordinates[1] << endl;
         if(!validateCoord(localBoatCoordinates)){
           return false;
         } else if(tileHasShip(localBoatCoordinates) == true){
@@ -238,7 +239,7 @@ class boardClass {
       return true;
     } 
     bool tileHasShip(int* localBoatCoordinates){
-      if(!board[localBoatCoordinates[1]][localBoatCoordinates[0]].hasShip){
+      if(!board[localBoatCoordinates[0]][localBoatCoordinates[1]].hasShip){
         return false;
       } else {
         return true;
