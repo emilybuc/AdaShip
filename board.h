@@ -85,11 +85,10 @@ class boardClass {
     }
 
     void setShipsMenu(){
-      boatClass gameBoatsClass;
-      vector <boat> boatList = gameBoatsClass.getBoats();
-
       string input = "-1"; //declare and initialise an integer type variable
 	    do { //set up a continuous loop
+        boatClass gameBoatsClass;
+        vector <boat> boatList = gameBoatsClass.getBoats();
         cout << "\nPlease choose from the following options\n1. Set boats manually\n2. Automatically set boats \n0. Quit\n\n";
         getline(cin, input);
         if(isNo(input)){
@@ -118,17 +117,18 @@ class boardClass {
                 }
               }
               outputPlayersBoard(false, true);
-              cout << "Are you happy with this placement? Please type Y/N"; break;
+              input = yOrN();
+              break;
             case 2: 
                 for (int i = 0; i < boatList.size(); i++){
                   boatCoordinates[0] = rand() % boardCoordinates[0];
                   boatCoordinates[1] = rand() % boardCoordinates[1];
-                  cout << "i = " << i << endl;
                   if(!autoSetShips(boatList[i])){
                     i--;
                   }
                 }
                 outputPlayersBoard(false, true);
+                input = yOrN();
                 break;
             case 0: break;
             default:
@@ -137,7 +137,6 @@ class boardClass {
             };
         }
       } while(input != "0");
-      cout << "Goodbye\n";
     }
     bool validateInput(string input){
       int convertCharToCoord = 65;
@@ -222,11 +221,9 @@ class boardClass {
     bool validateBoatPlacement(boat currentBoat, int movementOnXorY, int plusOrMinus1){
       int localBoatCoordinates[2] = { boatCoordinates[0], boatCoordinates[1] };
       for(int i = 0; i <= currentBoat.size - 1 ; i++){
-        cout << localBoatCoordinates[0] << ", " << localBoatCoordinates[1] << endl;
         if(!validateCoord(localBoatCoordinates)){
           return false;
         } else if(tileHasShip(localBoatCoordinates) == true){
-          cout << "tile has a ship" << endl;
           return false;
         } else {
           localBoatCoordinates[movementOnXorY] += plusOrMinus1;
@@ -248,17 +245,41 @@ class boardClass {
     bool autoSetShips(boat currentBoat){
       int movementOnXorY = rand() % 2;
       int randomNumber = rand() % 4;
-      int arrayWithPlusOrMinus1[4] = {-1, 1, 1,-1};
-      cout << movementOnXorY;
-      int plusOrMinus1 = arrayWithPlusOrMinus1[randomNumber];
       
       if(!validateBoatPlacement(currentBoat, movementOnXorY, -1)){
         resetBoatCoord();
         return false;
       } else {
         resetBoatCoord();
-        outputPlayersBoard(false, true);
         return true;
+      }
+    }
+    string yOrN(){
+      string inputTryAgain; 
+      cout << "\nAre you happy with this placement? Please type Y/N: ";
+      getline(cin, inputTryAgain);
+      //asking for Y/N input
+      if(inputTryAgain == "Y" || inputTryAgain == "y"){
+        return "0";
+        //If yes then exit and go 
+      } else if (inputTryAgain == "N" || inputTryAgain == "n"){
+        cout << "Ok, please retry placing boats\n";
+        emptyBoard();
+        return "-1";
+        //Isnt exiting the function 
+        //exit
+      } else {
+        cout << "invalid input, try again \n";
+        yOrN();
+        return "-1";
+        //fall back if they enter something else
+      }
+    }
+    void emptyBoard(){
+      for(int xAxis = 0; xAxis <= boardCoordinates[0] - 1; xAxis++){
+        for(int yAxis = 0; yAxis <= boardCoordinates[1] - 1; yAxis++){
+          board[xAxis][yAxis] = {false, false, false};
+        }
       }
     }
 };
