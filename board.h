@@ -54,6 +54,7 @@ class boardClass {
           cout << "\t" << letter;
         } else if (variation == 3){
           char secondletter = letter - (variation * alpha);
+          system("Color F3");
           cout << "\t" << "A" << secondletter;
         } else if (variation == 4){
           char secondletter = letter - (variation * alpha);
@@ -97,45 +98,60 @@ class boardClass {
             case 1: 
               for (int i = 0; i < boatList.size(); i++){
                 outputPlayersBoard(false, true);
-                string choice;
-                cout << endl << "Please choose where you want the front of boat ("<< i + 1 <<") to go (eg. A5)" << "\n";
-                gameBoatsClass.listBoats();
-                cout << "\n\n";
-                getline(cin, choice);
-                bool validInput = validateInput(choice);
-                if(validInput == true){
-                  cout << "Please choose which direction you want the rest of the boat to go (L)eft (R)ight (U)p (D)own:\n";
+                string choice, option;
+                cout << "\nPlease choose an option: \n(M) Manually place next boat\n(A) Auto-place the rest of the boats\n(Q) Quit\nOption:";
+                getline(cin, option);
+                if(option == "M" || option == "m"){
+                  cout << endl << "Please choose where you want the front of boat ("<< i + 1 <<") to go (eg. A5)" << "\n";
+                  gameBoatsClass.listBoats();
+                  cout << "\n\n";
                   getline(cin, choice);
-                  if(!setShip(choice, boatList[i])){
-                    cout << "\nYou cant place a boat here, please try again!\n\n";
+                  bool validInput = validateInput(choice);
+                  if(validInput == true){
+                    cout << "Please choose which direction you want the rest of the boat to go (L)eft (R)ight (U)p (D)own:\n";
+                    getline(cin, choice);
+                    if(!setShip(choice, boatList[i])){
+                      cout << "\nYou cant place a boat here, please try again!\n\n";
+                      i--;
+                    }
+                  } else {
+                    //sort out some validation for input
+                    cout << "That coordinate cannot be placed please try again \n";
                     i--;
                   }
+                } else if (option == "A" || option == "a"){
+                    for (int j = i; j < boatList.size(); j++){
+                      if(!autoSetShips(boatList[j])){
+                        j--;
+                      }
+                    }
+                    outputPlayersBoard(false, true);
+                    input = yOrN();
+                    return;
                 } else {
-                  //sort out some validation for input
-                  cout << "That coordinate cannot be placed please try again \n";
-                  i--;
+                    cout << "\n'" << option << "' Is an invalid option  - please try again.\n";
+                    i--;
                 }
               }
               outputPlayersBoard(false, true);
               input = yOrN();
               break;
             case 2: 
-                for (int i = 0; i < boatList.size(); i++){
-                  boatCoordinates[0] = rand() % boardCoordinates[0];
-                  boatCoordinates[1] = rand() % boardCoordinates[1];
-                  if(!autoSetShips(boatList[i])){
-                    i--;
-                  }
+              for (int i = 0; i < boatList.size(); i++){
+                if(!autoSetShips(boatList[i])){
+                  i--;
                 }
-                outputPlayersBoard(false, true);
-                input = yOrN();
-                break;
+              }
+              outputPlayersBoard(false, true);
+              input = yOrN();
+              break;
             case 0: break;
             default:
                 cout << "\n'" << input << "' Is an invalid option  - please try again.";
                 break;
             };
         }
+        cout << "input: " << input << endl; 
       } while(input != "0");
     }
     bool validateInput(string input){
@@ -243,6 +259,8 @@ class boardClass {
       }
     }
     bool autoSetShips(boat currentBoat){
+      boatCoordinates[0] = rand() % boardCoordinates[0];
+      boatCoordinates[1] = rand() % boardCoordinates[1];
       int movementOnXorY = rand() % 2;
       int randomNumber = rand() % 4;
       
