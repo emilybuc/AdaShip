@@ -9,9 +9,15 @@ class boardClass {
     vector<vector<tile>> board;
     int boardCoordinates[2];
     int boatCoordinates[2];
+    boatClass gameBoatsClass;
+    vector <boat> boatList;
+    bool showMines;
+    bool playersBoard;
   public:
     boardClass(){
       getConfigBoard();
+      boatList = gameBoatsClass.getBoats();
+      showMines = false;
       for(int xAxis = 0; xAxis <= boardCoordinates[0] - 1; xAxis++){
         vector<tile>temp;
         for(int yAxis = 0; yAxis <= boardCoordinates[1] - 1; yAxis++){
@@ -19,11 +25,6 @@ class boardClass {
         }
         board.push_back(temp);
       }
-      // for (int i =0; i<tiles.size(); i++){
-      //   for (int j = 0; j < tiles[i].size(); j++){
-      //     cout << tiles[i][j].hit;
-      //   }
-      // }
     }
     void getConfigBoard() {
 			ifstream config;
@@ -44,7 +45,7 @@ class boardClass {
       }
 			config.close();
 		}
-    void outputPlayersBoard(bool gameStarted, bool playersBoard){
+    void outputBoard(){
       //change function to output AA and BA etc doesnt work atm
       cout << "  ";
       int alpha = 26;
@@ -74,7 +75,7 @@ class boardClass {
             cout << "\t" << "H";
           } else if (board[j][i].hasShip && playersBoard){
             cout <<"\t" << board[j][i].hasShip;
-          } else if (board[j][i].hasMine == true && gameStarted == true){
+          } else if (board[j][i].hasMine == true && showMines == true){
             cout << "\t" << "M" << setw(2);
           } else if(!board[j][i].hit){
             cout << "\t" << "-" ;
@@ -87,9 +88,8 @@ class boardClass {
 
     void setShipsMenu(){
       string input = "-1"; //declare and initialise an integer type variable
+      playersBoard = true;
 	    do { //set up a continuous loop
-        boatClass gameBoatsClass;
-        vector <boat> boatList = gameBoatsClass.getBoats();
         cout << "\nPlease choose from the following options\n1. Set boats manually\n2. Automatically set boats \n0. Quit\n\n";
         getline(cin, input);
         if(isNo(input)){
@@ -97,7 +97,7 @@ class boardClass {
           switch(inputInt){
             case 1: 
               for (int i = 0; i < boatList.size(); i++){
-                outputPlayersBoard(false, true);
+                outputBoard();
                 string choice, option;
                 cout << "\nPlease choose an option: \n(M) Manually place next boat\n(A) Auto-place the rest of the boats\n(Q) Quit\nOption:";
                 getline(cin, option);
@@ -121,13 +121,8 @@ class boardClass {
                     i--;
                   }
                 } else if (option == "A" || option == "a"){
-                    for (int j = i; j < boatList.size(); j++){
-                      cout << "why tho";
-                      if(!autoSetShips(boatList[j])){
-                        j--;
-                      }
-                    }
-                    outputPlayersBoard(false, true);
+                    autoSetShips(i);
+                    outputBoard();
                     break;
                 } else if (option == "Q" || option == "q"){
                   input = "0";
@@ -137,16 +132,11 @@ class boardClass {
                 }
               }
               input = yOrN();
-              cout << input;
               break;
             case 2: 
-            cout <<"potato";
-              for (int i = 0; i < boatList.size(); i++){
-                if(!autoSetShips(boatList[i])){
-                  i--;
-                }
-              }
-              outputPlayersBoard(false, true);
+              //maybe change this to a variable so its easier to understand
+              autoSetShips(0);
+              outputBoard();
               input = yOrN();
               break;
             case 0: break;
@@ -154,9 +144,9 @@ class boardClass {
                 cout << "\n'" << input << "' Is an invalid option  - please try again.";
                 break;
             };
-        }
-        cout << "input: " << input << endl; 
+        } 
       } while(input != "0");
+      showMines = true;
     }
     bool validateInput(string input){
       int convertCharToCoord = 65;
@@ -262,18 +252,19 @@ class boardClass {
         return true;
       }
     }
-    bool autoSetShips(boat currentBoat){
-      boatCoordinates[0] = rand() % boardCoordinates[0];
-      boatCoordinates[1] = rand() % boardCoordinates[1];
-      int movementOnXorY = rand() % 2;
-      int randomNumber = rand() % 4;
-      
-      if(!validateBoatPlacement(currentBoat, movementOnXorY, -1)){
-        resetBoatCoord();
-        return false;
-      } else {
-        resetBoatCoord();
-        return true;
+    void autoSetShips(int i){
+      for (int j = i; j < boatList.size(); j++){
+        boatCoordinates[0] = rand() % boardCoordinates[0];
+        boatCoordinates[1] = rand() % boardCoordinates[1];
+        int movementOnXorY = rand() % 2;
+        int randomNumber = rand() % 4;
+        
+        if(!validateBoatPlacement(boatList[j], movementOnXorY, -1)){
+          resetBoatCoord();
+          j--;
+        } else {
+          resetBoatCoord();
+        }
       }
     }
     string yOrN(){
@@ -303,6 +294,11 @@ class boardClass {
           board[xAxis][yAxis] = {false, false, false};
         }
       }
+    }
+    void computerPlayerBoard(){
+      //maybe change this to a variable so its easier to understand
+      playersBoard = false;
+      autoSetShips(0);
     }
 };
 
