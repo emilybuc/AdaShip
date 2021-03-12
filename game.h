@@ -2,7 +2,9 @@
 #include "config.h"
 #include "board.h"
 #include "boatConfig.h"
+
 int getIntFromFile(stringstream& lineStream, char delimiter);
+void shootMissile(boardClass& board, string input);
 
 void OneVsComp(){
   bool gameStarted = false;
@@ -23,6 +25,15 @@ void OneVsComp(){
     computerBoard.outputBoard();
     cout << "\nPlease enter the coordinates of the missile you want to fire: ";
     getline(cin, input);
-
+    shootMissile(computerBoard, input);
   	} while(input != "0" || endgame != true);
+}
+
+void shootMissile(boardClass &board, string input){
+  if(board.validateInput(input)){
+    int missleCoord[2] = { board.getCoordinates()[0], board.getCoordinates()[1] };
+    cout << missleCoord[0] << ", " << missleCoord[1] << endl;
+  } else {
+    
+  }
 }

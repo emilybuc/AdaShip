@@ -305,6 +305,9 @@ class boardClass {
       playersBoard = false;
       autoSetShips(0);
     }
+    int* getCoordinates(){
+      return coordinates;
+    }
 };
 
 //board.h
