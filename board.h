@@ -101,6 +101,7 @@ class boardClass {
                 string choice, option;
                 cout << "\nPlease choose an option: \n(M) Manually place next boat\n(A) Auto-place the rest of the boats\n(Q) Quit\nOption:";
                 getline(cin, option);
+                //instead of doing 2 menus maybe do one and validate if they've inputted A or Q if they want to quit instead of 2 menus 
                 if(option == "M" || option == "m"){
                   cout << endl << "Please choose where you want the front of boat ("<< i + 1 <<") to go (eg. A5)" << "\n";
                   gameBoatsClass.listBoats();
@@ -121,25 +122,25 @@ class boardClass {
                   }
                 } else if (option == "A" || option == "a"){
                     for (int j = i; j < boatList.size(); j++){
+                      cout << "why tho";
                       if(!autoSetShips(boatList[j])){
                         j--;
                       }
                     }
                     outputPlayersBoard(false, true);
-                    input = yOrN();
                     break;
                 } else if (option == "Q" || option == "q"){
                   input = "0";
-                  break;
                 } else {
                     cout << "\n'" << option << "' Is an invalid option  - please try again.\n";
                     i--;
                 }
               }
-              outputPlayersBoard(false, true);
               input = yOrN();
+              cout << input;
               break;
             case 2: 
+            cout <<"potato";
               for (int i = 0; i < boatList.size(); i++){
                 if(!autoSetShips(boatList[i])){
                   i--;
