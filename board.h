@@ -8,7 +8,7 @@ class boardClass {
   private:
     vector<vector<tile>> board;
     int boardCoordinates[2];
-    int boatCoordinates[2];
+    int coordinates[2];
     boatClass gameBoatsClass;
     vector <boat> boatList;
     bool showMines;
@@ -125,6 +125,7 @@ class boardClass {
                     outputBoard();
                     break;
                 } else if (option == "Q" || option == "q"){
+                  //this doesnt work
                   input = "0";
                 } else {
                     cout << "\n'" << option << "' Is an invalid option  - please try again.\n";
@@ -154,23 +155,23 @@ class boardClass {
       for (int i = 0; i < input.size(); i++){
         if(isalpha(input[i])){
           int uppercaseChar = toupper(input[i]);
-          boatCoordinates[0] += (uppercaseChar - convertCharToCoord);
+          coordinates[0] += (uppercaseChar - convertCharToCoord);
         } else if(isdigit(input[i])){
           if(isdigit(input[i + 1])){
             int firstDigit = convertArrayToInt(input[i]) * 10;
             int secondDigit = convertArrayToInt(input[i + 1]);
             int finalNum = (firstDigit + secondDigit);
-            boatCoordinates[1] = finalNum - 1;
+            coordinates[1] = finalNum - 1;
             break;
           } else {
-            boatCoordinates[1] = convertArrayToInt(input[i]) - 1;
+            coordinates[1] = convertArrayToInt(input[i]) - 1;
           }
         } else {
           resetBoatCoord();
           return false;
         }
       }
-      if(validateCoord(boatCoordinates)){
+      if(validateCoord(coordinates)){
         return true;
       } else {
         resetBoatCoord();
@@ -185,20 +186,20 @@ class boardClass {
       return convertFromAsciiToInt;
     }
 
-    bool validateCoord(int* boatCoord){
-      if(boatCoord[0] < boardCoordinates[0] && boatCoord[1] < boardCoordinates[1] && boatCoord[0] >= 0 && boatCoord[1] >= 0){
+    bool validateCoord(int* coord){
+      if(coord[0] < boardCoordinates[0] && coord[1] < boardCoordinates[1] && coord[0] >= 0 && coord[1] >= 0){
         return true;
       }
       return false;
     }
     
     void resetBoatCoord(){
-      boatCoordinates[0] = 0;
-      boatCoordinates[1] = 0;
+      coordinates[0] = 0;
+      coordinates[1] = 0;
     }
     void inputShipIntoCoordinate(boat currentBoat){
       char characterForBoard = currentBoat.name[0];
-      board[boatCoordinates[0]][boatCoordinates[1]].hasShip = characterForBoard;
+      board[coordinates[0]][coordinates[1]].hasShip = characterForBoard;
 
     }
     int setShip(string direction, boat currentBoat){
@@ -229,7 +230,7 @@ class boardClass {
     }
 
     bool validateBoatPlacement(boat currentBoat, int movementOnXorY, int plusOrMinus1){
-      int localBoatCoordinates[2] = { boatCoordinates[0], boatCoordinates[1] };
+      int localBoatCoordinates[2] = { coordinates[0], coordinates[1] };
       for(int i = 0; i <= currentBoat.size - 1 ; i++){
         if(!validateCoord(localBoatCoordinates)){
           return false;
@@ -241,7 +242,7 @@ class boardClass {
       }
       for(int i = 0; i <= currentBoat.size - 1 ; i++){
         inputShipIntoCoordinate(currentBoat);
-        boatCoordinates[movementOnXorY] += plusOrMinus1;
+        coordinates[movementOnXorY] += plusOrMinus1;
       }
       return true;
     } 
@@ -254,8 +255,8 @@ class boardClass {
     }
     void autoSetShips(int i){
       for (int j = i; j < boatList.size(); j++){
-        boatCoordinates[0] = rand() % boardCoordinates[0];
-        boatCoordinates[1] = rand() % boardCoordinates[1];
+        coordinates[0] = rand() % boardCoordinates[0];
+        coordinates[1] = rand() % boardCoordinates[1];
         int movementOnXorY = rand() % 2;
         int randomNumber = rand() % 4;
         
@@ -302,3 +303,4 @@ class boardClass {
     }
 };
 
+//board.h

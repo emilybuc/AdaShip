@@ -21,7 +21,8 @@ void OneVsComp(){
     playersBoard.outputBoard();
     cout << "\nTarget Board\n";
     computerBoard.outputBoard();
-    cout << "\nPlease enter the coordinates of the missle you want to fire: ";
+    cout << "\nPlease enter the coordinates of the missile you want to fire: ";
     getline(cin, input);
+
   	} while(input != "0" || endgame != true);
 }
