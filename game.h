@@ -31,8 +31,11 @@ void OneVsComp(){
 
 void shootMissile(boardClass &board, string input){
   if(board.validateInput(input)){
-    int missleCoord[2] = { board.getCoordinates()[0], board.getCoordinates()[1] };
-    cout << missleCoord[0] << ", " << missleCoord[1] << endl;
+    if(board.setHit()){
+      cout << "\nYour missile hit!\n";
+    } else {
+      cout << "\nYour missile missed\n";
+    }
   } else {
     
   }

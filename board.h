@@ -170,7 +170,7 @@ class boardClass {
             coordinates[1] = convertArrayToInt(input[i]) - 1;
           }
         } else {
-          resetBoatCoord();
+          resetCoord();
           return false;
         }
       }
@@ -178,7 +178,7 @@ class boardClass {
       if(validateCoord(coordinates)){
         return true;
       } else {
-        resetBoatCoord();
+        resetCoord();
         return false;
       }
     }
@@ -197,7 +197,7 @@ class boardClass {
       return false;
     }
     
-    void resetBoatCoord(){
+    void resetCoord(){
       coordinates[0] = 0;
       coordinates[1] = 0;
     }
@@ -225,10 +225,10 @@ class boardClass {
         return 1;
       }
       if(successfulBoatPlacement == true){
-        resetBoatCoord();
+        resetCoord();
         return true;
       } else {
-        resetBoatCoord();
+        resetCoord();
         return false;
       }
     }
@@ -265,10 +265,10 @@ class boardClass {
         int randomNumber = rand() % 4;
         
         if(!validateBoatPlacement(boatList[j], movementOnXorY, -1)){
-          resetBoatCoord();
+          resetCoord();
           j--;
         } else {
-          resetBoatCoord();
+          resetCoord();
         }
       }
     }
@@ -302,11 +302,21 @@ class boardClass {
     }
     void computerPlayerBoard(){
       //maybe change this to a variable so its easier to understand
-      playersBoard = false;
+      playersBoard = true;
       autoSetShips(0);
     }
     int* getCoordinates(){
       return coordinates;
+    }
+    bool setHit(){
+      board[coordinates[0]][coordinates[1]].hit = true;
+      if(board[coordinates[0]][coordinates[1]].hasShip){
+        resetCoord();
+        return true;
+      } else {
+        resetCoord();
+        return false;
+      }
     }
 };
 
