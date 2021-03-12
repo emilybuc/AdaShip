@@ -18,6 +18,8 @@ class boardClass {
       getConfigBoard();
       boatList = gameBoatsClass.getBoats();
       showMines = false;
+      coordinates[0] = 0;
+      coordinates[1] = 0;
       for(int xAxis = 0; xAxis <= boardCoordinates[0] - 1; xAxis++){
         vector<tile>temp;
         for(int yAxis = 0; yAxis <= boardCoordinates[1] - 1; yAxis++){
@@ -154,6 +156,7 @@ class boardClass {
       int convertIntToCoord = 48;
       for (int i = 0; i < input.size(); i++){
         if(isalpha(input[i])){
+          cout << input[i] << endl;
           int uppercaseChar = toupper(input[i]);
           coordinates[0] += (uppercaseChar - convertCharToCoord);
         } else if(isdigit(input[i])){
@@ -171,6 +174,7 @@ class boardClass {
           return false;
         }
       }
+      cout << coordinates[0] << ", " << coordinates[1] << endl;
       if(validateCoord(coordinates)){
         return true;
       } else {
