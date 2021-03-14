@@ -5,6 +5,7 @@
 
 int getIntFromFile(stringstream& lineStream, char delimiter);
 void shootMissile(boardClass& board);
+bool isEndGame(boardClass &playersBoard, boardClass &computerBoard);
 
 void OneVsComp(){
   bool gameStarted = false;
@@ -12,19 +13,19 @@ void OneVsComp(){
   playersBoard.setShipsMenu();
   boardClass computerBoard;
   computerBoard.computerPlayerBoard();
-  bool endgame = false;
+  bool endGame = false;
   system("clear");
   //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
   cout << "\t\t\tLet the game commence!\n";
 	do { //set up a continuous loop
-    gameStarted = true;
     cout << "\nYour Board\n";
     playersBoard.outputBoard();
     cout << "\nTarget Board\n";
     computerBoard.outputBoard();
     shootMissile(computerBoard);
-    endgame = false;
-  	} while(endgame != true);
+    endGame = isEndGame(playersBoard, computerBoard);
+  	} while(endGame != true);
+    cout << "\nThe game has ended, I hope you had fun\n";
 }
 
 void shootMissile(boardClass &board){
@@ -44,8 +45,19 @@ void shootMissile(boardClass &board){
     } else {
     cout << "\nYour missile missed\n";
     }
-    cout << "Press any key to finish your turn: ";
+    cout << "Enter any key to finish your turn: ";
     getline(cin, input);
     loop = false;
   }
+}
+
+bool isEndGame(boardClass &playersBoard, boardClass &computerBoard){
+  if(playersBoard.hasGameEnded()){
+    cout << "You lost against a computer, what are you doing?\n";
+    return true;
+  } else if(computerBoard.hasGameEnded()){
+    cout << "You won!";
+    return true;
+  }
+  return false;
 }

@@ -315,6 +315,7 @@ class boardClass {
     bool setHit(){
       if(board[coordinates[0]][coordinates[1]].hasShip){
         board[coordinates[0]][coordinates[1]].hit = 'H';
+        tilesToHit--;
         resetCoord();
         return true;
       } else {
@@ -327,9 +328,11 @@ class boardClass {
         coordinates[0] = rand() % boardCoordinates[0];
         coordinates[1] = rand() % boardCoordinates[1];
         //set coordinates to a coordinate inside the board
-        cout << coordinates[0] << ", " << coordinates[1] << endl;
     }
-    bool getEndGame(){
+    bool hasGameEnded(){
+      if(tilesToHit == 0){
+        return true;
+      } 
       return false;
     }
 };
