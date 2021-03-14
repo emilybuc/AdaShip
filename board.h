@@ -13,6 +13,7 @@ class boardClass {
     vector <boat> boatList;
     bool showMines;
     bool playersBoard;
+    int tilesToHit;
   public:
     boardClass(){
       getConfigBoard();
@@ -20,6 +21,7 @@ class boardClass {
       showMines = false;
       coordinates[0] = 0;
       coordinates[1] = 0;
+      tilesToHit = 0;
       for(int xAxis = 0; xAxis <= boardCoordinates[0] - 1; xAxis++){
         vector<tile>temp;
         for(int yAxis = 0; yAxis <= boardCoordinates[1] - 1; yAxis++){
@@ -73,8 +75,10 @@ class boardClass {
         int rowNumbers = i + 1;
         cout << setw(2) << rowNumbers;
         for (int j = 0; j < board[i].size(); j++){
-           if (board[j][i].hit){
-            cout << "\t" << "H";
+           if (board[j][i].hit == 'H'){
+            cout << "\t" << board[j][i].hit;
+          } else if (board[j][i].hit == 'M'){
+            cout <<"\t" << board[j][i].hit;
           } else if (board[j][i].hasShip && playersBoard){
             cout <<"\t" << board[j][i].hasShip;
           } else if (board[j][i].hasMine == true && showMines == true){
@@ -247,6 +251,7 @@ class boardClass {
       for(int i = 0; i <= currentBoat.size - 1 ; i++){
         inputShipIntoCoordinate(currentBoat);
         coordinates[movementOnXorY] += plusOrMinus1;
+        tilesToHit++;
       }
       return true;
     } 
@@ -259,8 +264,7 @@ class boardClass {
     }
     void autoSetShips(int i){
       for (int j = i; j < boatList.size(); j++){
-        coordinates[0] = rand() % boardCoordinates[0];
-        coordinates[1] = rand() % boardCoordinates[1];
+        randomCoordinates();
         int movementOnXorY = rand() % 2;
         int randomNumber = rand() % 4;
         
@@ -309,14 +313,24 @@ class boardClass {
       return coordinates;
     }
     bool setHit(){
-      board[coordinates[0]][coordinates[1]].hit = true;
       if(board[coordinates[0]][coordinates[1]].hasShip){
+        board[coordinates[0]][coordinates[1]].hit = 'H';
         resetCoord();
         return true;
       } else {
+        board[coordinates[0]][coordinates[1]].hit = 'M';
         resetCoord();
         return false;
       }
+    }
+    void randomCoordinates(){
+        coordinates[0] = rand() % boardCoordinates[0];
+        coordinates[1] = rand() % boardCoordinates[1];
+        //set coordinates to a coordinate inside the board
+        cout << coordinates[0] << ", " << coordinates[1] << endl;
+    }
+    bool getEndGame(){
+      return false;
     }
 };
 

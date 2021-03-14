@@ -4,7 +4,7 @@
 #include "boatConfig.h"
 
 int getIntFromFile(stringstream& lineStream, char delimiter);
-void shootMissile(boardClass& board, string input);
+void shootMissile(boardClass& board);
 
 void OneVsComp(){
   bool gameStarted = false;
@@ -12,7 +12,6 @@ void OneVsComp(){
   playersBoard.setShipsMenu();
   boardClass computerBoard;
   computerBoard.computerPlayerBoard();
-  string input;
   bool endgame = false;
   system("clear");
   //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
@@ -23,20 +22,30 @@ void OneVsComp(){
     playersBoard.outputBoard();
     cout << "\nTarget Board\n";
     computerBoard.outputBoard();
-    cout << "\nPlease enter the coordinates of the missile you want to fire: ";
-    getline(cin, input);
-    shootMissile(computerBoard, input);
-  	} while(input != "0" || endgame != true);
+    shootMissile(computerBoard);
+    endgame = false;
+  	} while(endgame != true);
 }
 
-void shootMissile(boardClass &board, string input){
-  if(board.validateInput(input)){
+void shootMissile(boardClass &board){
+  string input;
+  bool loop = true;
+  while(loop == true){
+    cout << "\nPlease enter the coordinates of the missile you want to fire or type (A) for an automatic missile: ";
+    getline(cin, input);
+    if(input == "a" || input == "A"){
+      board.randomCoordinates();
+    } else if (!board.validateInput(input)){
+        cout << "That coordinate isnt valid, please retry";
+        break;
+    }
     if(board.setHit()){
       cout << "\nYour missile hit!\n";
     } else {
-      cout << "\nYour missile missed\n";
+    cout << "\nYour missile missed\n";
     }
-  } else {
-    
+    cout << "Press any key to finish your turn: ";
+    getline(cin, input);
+    loop = false;
   }
 }
