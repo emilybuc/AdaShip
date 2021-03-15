@@ -4,7 +4,7 @@
 #include "boatConfig.h"
 
 int getIntFromFile(stringstream& lineStream, char delimiter);
-bool shootMissile(boardClass& board);
+bool playerShootMissile(boardClass& board);
 bool isEndGame(boardClass &playersBoard, boardClass &computerBoard);
 void computerShootMissile(boardClass &playersBoard);
 
@@ -23,8 +23,9 @@ void OneVsComp(){
     playersBoard.outputBoard();
     cout << "\nTarget Board\n";
     computerBoard.outputBoard();
-    shootMissile(computerBoard);
+    endGame = playerShootMissile(computerBoard);
     endGame = isEndGame(playersBoard, computerBoard);
+    if(endGame)break;
 
     cout << "\nComputers Turn\n\nComputers Board\n";
     computerBoard.outputBoard();
@@ -36,7 +37,7 @@ void OneVsComp(){
     cout << "\nThe game has ended, I hope you had fun\n";
 }
 
-bool shootMissile(boardClass &board){
+bool playerShootMissile(boardClass &board){
   string input;
   bool loop = true;
   while(loop == true){
