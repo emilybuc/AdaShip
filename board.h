@@ -325,8 +325,14 @@ class boardClass {
       }
     }
     void randomCoordinates(){
-        coordinates[0] = rand() % boardCoordinates[0];
-        coordinates[1] = rand() % boardCoordinates[1];
+        bool loop = true;
+        while(loop == true){
+          coordinates[0] = rand() % boardCoordinates[0];
+          coordinates[1] = rand() % boardCoordinates[1];
+          if(board[coordinates[0]][coordinates[1]].hit != 'H' || board[coordinates[0]][coordinates[1]].hit != 'M'){
+            loop = false;
+          }
+        }
         //set coordinates to a coordinate inside the board
     }
     bool hasGameEnded(){

@@ -4,8 +4,9 @@
 #include "boatConfig.h"
 
 int getIntFromFile(stringstream& lineStream, char delimiter);
-void shootMissile(boardClass& board);
+bool shootMissile(boardClass& board);
 bool isEndGame(boardClass &playersBoard, boardClass &computerBoard);
+void computerShootMissile(boardClass &playersBoard);
 
 void OneVsComp(){
   bool gameStarted = false;
@@ -18,17 +19,24 @@ void OneVsComp(){
   //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
   cout << "\t\t\tLet the game commence!\n";
 	do { //set up a continuous loop
-    cout << "\nYour Board\n";
+    cout << "\nYour Turn\n\nYour Board\n";
     playersBoard.outputBoard();
     cout << "\nTarget Board\n";
     computerBoard.outputBoard();
     shootMissile(computerBoard);
     endGame = isEndGame(playersBoard, computerBoard);
+
+    cout << "\nComputers Turn\n\nComputers Board\n";
+    computerBoard.outputBoard();
+    cout << "\nTarget Board\n";
+    playersBoard.outputBoard();
+    computerShootMissile(playersBoard);
+    endGame = isEndGame(playersBoard, computerBoard);
   	} while(endGame != true);
     cout << "\nThe game has ended, I hope you had fun\n";
 }
 
-void shootMissile(boardClass &board){
+bool shootMissile(boardClass &board){
   string input;
   bool loop = true;
   while(loop == true){
@@ -36,6 +44,9 @@ void shootMissile(boardClass &board){
     getline(cin, input);
     if(input == "a" || input == "A"){
       board.randomCoordinates();
+    } else if (input == "q" || input == "Q"){
+        loop = false;
+        return true;
     } else if (!board.validateInput(input)){
         cout << "That coordinate isnt valid, please retry";
         break;
@@ -48,6 +59,7 @@ void shootMissile(boardClass &board){
     cout << "Enter any key to finish your turn: ";
     getline(cin, input);
     loop = false;
+    return false;
   }
 }
 
@@ -60,4 +72,16 @@ bool isEndGame(boardClass &playersBoard, boardClass &computerBoard){
     return true;
   }
   return false;
+}
+
+void computerShootMissile(boardClass &board){
+  board.randomCoordinates();
+  if(board.setHit()){
+      cout << "\nComputers missile hit!\n";
+    } else {
+    cout << "\nComputers missile missed\n";
+  }
+  string endTurn;
+  cout << "Enter any key to finish the computers turn: ";
+  getline(cin, endTurn);
 }
