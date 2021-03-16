@@ -10,10 +10,8 @@ bool isNo(string input);
 
 
 //Header files
-#include "game.h"
+#include "gameModes.h"
 #include "board.h"
-
-
 
 int main() {
   srand((unsigned) time(NULL));
@@ -27,6 +25,7 @@ void menu(void) {
 	do { //set up a continuous loop
 		cout << "\nAdaShip! not like battleships in anyway:\n";
 		cout << "\t1. One player v computer game\n";
+    cout << "\t2. Two player game\n";
 
 		cout << "\n\t0. Quit\n";
 
@@ -36,7 +35,8 @@ void menu(void) {
       int choiceInt = stoi(choice);
       //Had to change the input because using cin and getline in the same application was causing bugs
       switch(choiceInt) {
-        case 1: OneVsComp(); break;
+        case 1: oneVsComp(); break;
+        case 2: twoPlayerGame(); break;
         case 0: cout << "Exiting"; break;
         default:
           cout << "\n'" << choice << "' Is an invalid option  - please try again.";
