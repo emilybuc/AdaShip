@@ -26,6 +26,9 @@ class boardClass {
         vector<tile>temp;
         for(int yAxis = 0; yAxis <= boardCoordinates[1] - 1; yAxis++){
           temp.push_back({false, false, false});
+          // cout << "has ship: " << temp[yAxis].hasShip << endl;
+          // cout << "hit: " << temp[yAxis].hasShip << endl;
+          // cout << "hasMine: " << temp[yAxis].hasMine << endl;
         }
         board.push_back(temp);
       }
@@ -53,21 +56,19 @@ class boardClass {
       //change function to output AA and BA etc doesnt work atm
       cout << "  ";
       int alpha = 26;
-      for (char letter = 'A'; letter <= boardCoordinates[0] + 64; letter++){
-        int variation = floor(letter / alpha);
-        if(variation == 2){
+      for (char letter = 'A'; letter <= boardCoordinates[1] + 64; letter++){
+        // int variation = floor(letter / alpha);
           cout << "\t" << letter;
-        } else if (variation == 3){
-          char secondletter = letter - (variation * alpha);
-          system("Color F3");
-          cout << "\t" << "A" << secondletter;
-        } else if (variation == 4){
-          char secondletter = letter - (variation * alpha);
-          cout << "\t" << "B" << secondletter;
-        } else if (variation == 5){
-          char secondletter = letter - (variation * alpha);
-          cout << "\t" << "C" << secondletter;
-        }
+        // } else if (variation == 3){
+        //   char secondletter = letter - (variation * alpha);
+        //   cout << "\t" << "A" << secondletter;
+        // } else if (variation == 4){
+        //   char secondletter = letter - (variation * alpha);
+        //   cout << "\t" << "B" << secondletter;
+        // } else if (variation == 5){
+        //   char secondletter = letter - (variation * alpha);
+        //   cout << "\t" << "C" << secondletter;
+        // }
       }
       // board[0][0].hasMine = true;
       cout << endl;
@@ -75,6 +76,7 @@ class boardClass {
         int rowNumbers = i + 1;
         cout << setw(2) << rowNumbers;
         for (int j = 0; j < board[i].size(); j++){
+          // cout << "Hit: "<<board[j][i].hit << "\nHas Ship: " << board[j][i].hasShip;
            if (board[j][i].hit == 'H'){
             cout << "\t" << board[j][i].hit;
           } else if (board[j][i].hit == 'M'){
