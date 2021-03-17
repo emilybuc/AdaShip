@@ -15,6 +15,7 @@ bool isNo(string input);
 
 int main() {
   srand((unsigned) time(NULL));
+  //to get a random number by using the time
   menu();
   // OneVsComp();
   return 0;
@@ -26,6 +27,8 @@ void menu(void) {
 		cout << "\nAdaShip! not like battleships in anyway:\n";
 		cout << "\t1. One player v computer game\n";
     cout << "\t2. Two player game\n";
+    cout << "\t3. One player v computer game (salvo)\n";
+    cout << "\t4. Two player game (salvo)";
 
 		cout << "\n\t0. Quit\n";
 
@@ -37,6 +40,9 @@ void menu(void) {
       switch(choiceInt) {
         case 1: oneVsComp(); break;
         case 2: twoPlayerGame(); break;
+        case 3: oneVsCompSalvo(); break;
+        case 4: twoPlayerGameSalvo(); break;
+        
         case 0: cout << "Exiting"; break;
         default:
           cout << "\n'" << choice << "' Is an invalid option  - please try again.";

@@ -343,6 +343,29 @@ class boardClass {
       } 
       return false;
     }
+    int salvoMode(){
+      int c = 0, b = 0, d = 0, s = 0, p = 0, numOfBoatsNotSunk = 0;
+      for (int i = 0; i < board.size(); i++){
+        for (int j = 0; j < board[i].size(); j++){
+           if (board[i][j].hit == false && board[i][j].hasShip){
+            switch(board[i][j].hasShip) {
+              case 'C': c++; break; 
+              case 'B': b++; break;
+              case 'D': d++; break;
+              case 'S': s++; break;
+              case 'P': p++; break;
+            }
+          } 
+        }
+      }
+      int boatsNotSunk[] = {c,b,d,s,p}; 
+      for (int i = 0; i < 5; i++){ 
+        if(boatsNotSunk[i] != 0){
+          numOfBoatsNotSunk++;
+        }
+      }
+      return numOfBoatsNotSunk;
+    }
 };
 
 //board.h

@@ -3,7 +3,7 @@
 #include "board.h"
 #include "boatConfig.h"
 
-bool playerShootMissile(boardClass &board){
+bool playerShootMissile(boardClass &board, bool salvoMode){
   string input;
   bool loop = true;
   while(loop == true){
@@ -23,8 +23,10 @@ bool playerShootMissile(boardClass &board){
     } else {
     cout << "\nYour missile missed\n";
     }
-    cout << "Enter any key to finish your turn: ";
-    getline(cin, input);
+    if(!salvoMode){
+      cout << "Enter any key to finish your turn: ";
+      getline(cin, input);
+    }
     loop = false;
   }
   return false;
@@ -41,7 +43,7 @@ bool isEndGame(boardClass &playersBoard, boardClass &computerBoard){
   return false;
 }
 
-void computerShootMissile(boardClass &board){
+void computerShootMissile(boardClass &board, bool salvoMode){
   board.randomCoordinates();
   if(board.setHit()){
       cout << "\nComputers missile hit!\n";
@@ -49,6 +51,8 @@ void computerShootMissile(boardClass &board){
     cout << "\nComputers missile missed\n";
   }
   string endTurn;
-  cout << "Enter any key to finish the computers turn: ";
-  getline(cin, endTurn);
+  if(!salvoMode){
+    cout << "Enter any key to finish the computers turn: ";
+    getline(cin, endTurn);
+  }
 }

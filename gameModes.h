@@ -2,12 +2,13 @@
 #include "gameFuncs.h"
 
 void oneVsComp(){
-  bool gameStarted = false;
+  bool endGame = false;
   boardClass playersBoard;
   playersBoard.setShipsMenu();
   boardClass computerBoard;
   computerBoard.computerPlayerBoard();
-  bool endGame = false;
+  bool notSalvoMode = false;
+
   system("clear");
   //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
   cout << "\t\t\tLet the game commence!\n";
@@ -16,7 +17,7 @@ void oneVsComp(){
     playersBoard.outputBoard();
     cout << "\nTarget Board\n";
     computerBoard.outputBoard();
-    endGame = playerShootMissile(computerBoard);
+    endGame = playerShootMissile(computerBoard, notSalvoMode);
     endGame = isEndGame(playersBoard, computerBoard);
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on
@@ -25,14 +26,14 @@ void oneVsComp(){
     computerBoard.outputBoard();
     cout << "\nTarget Board\n";
     playersBoard.outputBoard();
-    computerShootMissile(playersBoard);
+    computerShootMissile(playersBoard, notSalvoMode);
     endGame = isEndGame(playersBoard, computerBoard);
   	} while(endGame != true);
     cout << "\nThe game has ended, I hope you had fun\n";
 }
 
 void twoPlayerGame(){
-  bool gameStarted = false;
+  bool notSalvoMode = false;
   bool endGame = false;
   system("clear");
   cout << "\t\t\tPlayer one set up!";
@@ -51,7 +52,7 @@ void twoPlayerGame(){
     playerOneBoard.outputBoard();
     cout << "\nTarget Board\n";
     playerTwoBoard.outputBoard();
-    endGame = playerShootMissile(playerTwoBoard);
+    endGame = playerShootMissile(playerTwoBoard, notSalvoMode);
     endGame = isEndGame(playerOneBoard, playerTwoBoard);
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on
@@ -60,9 +61,105 @@ void twoPlayerGame(){
     playerTwoBoard.outputBoard();
     cout << "\nTarget Board\n";
     playerOneBoard.outputBoard();
-    endGame = playerShootMissile(playerOneBoard);
+    endGame = playerShootMissile(playerOneBoard, notSalvoMode);
     endGame = isEndGame(playerTwoBoard, playerOneBoard);
     system("clear");
+  	} while(endGame != true);
+    cout << "\nThe game has ended, I hope you had fun\n";
+}
+
+void oneVsCompSalvo(){
+  string input;
+  bool salvoMode = true;
+  boardClass playersBoard;
+  playersBoard.setShipsMenu();
+  boardClass computerBoard;
+  computerBoard.computerPlayerBoard();
+  bool endGame = false;
+  system("clear");
+  //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
+  cout << "\t\t\tLet the game commence!\n";
+	do { //set up a continuous loop
+    cout << "\nYour Turn\n";
+    int amountOfMissiles = playersBoard.salvoMode();
+    while(amountOfMissiles != 0){
+      cout << "\nYour Board\n";
+      playersBoard.outputBoard();
+      cout << "\nTarget Board\n";
+      computerBoard.outputBoard();
+      cout << "You have (" << amountOfMissiles << ") Missile(s)";
+      endGame = playerShootMissile(computerBoard, true);
+      endGame = isEndGame(playersBoard, computerBoard);
+      if(endGame)break;
+      amountOfMissiles--;
+    }
+    cout << "Enter any key to finish your turn: ";
+    getline(cin, input);
+    //exit out of function if the game has been exited or won by the player before moving on
+
+    cout << "\nComputers Turn\n";
+    cout << "\nComputers Board\n";
+    computerBoard.outputBoard();
+    cout << "\nTarget Board\n";
+    playersBoard.outputBoard();
+    int amountOfComputersMissiles = computerBoard.salvoMode();
+    cout << "The computer has (" << amountOfComputersMissiles << ") Missile(s)";
+    while(amountOfComputersMissiles != 0){
+      computerShootMissile(playersBoard, salvoMode);
+      endGame = isEndGame(playersBoard, computerBoard);
+      if(endGame)break;
+      amountOfComputersMissiles--;
+    }
+    cout << "\nEnter any key to finish the computers turn: ";
+    getline(cin, input);
+  	} while(endGame != true);
+    cout << "\nThe game has ended, I hope you had fun\n";
+}
+
+void twoPlayerGameSalvo(){
+  string input;
+  bool salvoMode = true;
+  boardClass playersBoard;
+  playersBoard.setShipsMenu();
+  boardClass computerBoard;
+  computerBoard.computerPlayerBoard();
+  bool endGame = false;
+  system("clear");
+  //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
+  cout << "\t\t\tLet the game commence!\n";
+	do { //set up a continuous loop
+    cout << "\nYour Turn\n";
+    int amountOfMissiles = playersBoard.salvoMode();
+    while(amountOfMissiles != 0){
+      cout << "\nYour Board\n";
+      playersBoard.outputBoard();
+      cout << "\nTarget Board\n";
+      computerBoard.outputBoard();
+      cout << "You have (" << amountOfMissiles << ") Missile(s)";
+      endGame = playerShootMissile(computerBoard, true);
+      endGame = isEndGame(playersBoard, computerBoard);
+      if(endGame)break;
+      amountOfMissiles--;
+    }
+    cout << "Enter any key to finish your turn: ";
+    getline(cin, input);
+    //exit out of function if the game has been exited or won by the player before moving on
+
+    cout << "\nComputers Turn\n";
+    cout << "\nComputers Board\n";
+    computerBoard.outputBoard();
+    cout << "\nTarget Board\n";
+    playersBoard.outputBoard();
+    int amountOfComputersMissiles = computerBoard.salvoMode();
+    cout << "The computer has (" << amountOfComputersMissiles << ") Missile(s)";
+    while(amountOfComputersMissiles != 0){
+      computerShootMissile(playersBoard, salvoMode);
+      endGame = isEndGame(playersBoard, computerBoard);
+      if(endGame)break;
+      amountOfComputersMissiles--;
+    }
+    cout << "\nEnter any key to finish the computers turn: ";
+    getline(cin, input);
   	} while(endGame != true);
     cout << "\nThe game has ended, I hope you had fun\n";
 }
