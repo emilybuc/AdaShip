@@ -117,49 +117,56 @@ void oneVsCompSalvo(){
 }
 
 void twoPlayerGameSalvo(){
-  string input;
   bool salvoMode = true;
-  boardClass playersBoard;
-  playersBoard.setShipsMenu();
-  boardClass computerBoard;
-  computerBoard.computerPlayerBoard();
   bool endGame = false;
+  string input;
+
+  system("clear");
+  cout << "\t\t\tPlayer one set up!";
+  boardClass playerOneBoard;
+  playerOneBoard.setShipsMenu();
+  system("clear");
+  cout << "\t\t\tPlayer two set up!";
+  boardClass playerTwoBoard;
+  playerTwoBoard.setShipsMenu();
   system("clear");
   //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
   cout << "\t\t\tLet the game commence!\n";
 	do { //set up a continuous loop
-    cout << "\nYour Turn\n";
-    int amountOfMissiles = playersBoard.salvoMode();
-    while(amountOfMissiles != 0){
+    cout << "Player One's Turn\n";
+    int amountOfMissilesPlayerOne = playerOneBoard.salvoMode();
+    while(amountOfMissilesPlayerOne != 0){
       cout << "\nYour Board\n";
-      playersBoard.outputBoard();
+      playerOneBoard.outputBoard();
       cout << "\nTarget Board\n";
-      computerBoard.outputBoard();
-      cout << "You have (" << amountOfMissiles << ") Missile(s)";
-      endGame = playerShootMissile(computerBoard, true);
-      endGame = isEndGame(playersBoard, computerBoard);
+      playerTwoBoard.outputBoard();
+      cout << "You have (" << amountOfMissilesPlayerOne << ") Missile(s)";
+      endGame = playerShootMissile(playerTwoBoard, salvoMode);
+      endGame = isEndGame(playerOneBoard, playerTwoBoard);
       if(endGame)break;
-      amountOfMissiles--;
+      amountOfMissilesPlayerOne--;
     }
     cout << "Enter any key to finish your turn: ";
     getline(cin, input);
     //exit out of function if the game has been exited or won by the player before moving on
 
-    cout << "\nComputers Turn\n";
-    cout << "\nComputers Board\n";
-    computerBoard.outputBoard();
-    cout << "\nTarget Board\n";
-    playersBoard.outputBoard();
-    int amountOfComputersMissiles = computerBoard.salvoMode();
-    cout << "The computer has (" << amountOfComputersMissiles << ") Missile(s)";
-    while(amountOfComputersMissiles != 0){
-      computerShootMissile(playersBoard, salvoMode);
-      endGame = isEndGame(playersBoard, computerBoard);
+    system("clear");
+    cout << "Player Two's Turn\n";
+    int amountOfMissilesPlayerTwo = playerTwoBoard.salvoMode();
+    while(amountOfMissilesPlayerTwo != 0){
+      cout << "\nYour Board\n";
+      playerTwoBoard.outputBoard();
+      cout << "\nTarget Board\n";
+      playerOneBoard.outputBoard();
+      cout << "You have (" << amountOfMissilesPlayerTwo << ") Missile(s)";
+      endGame = playerShootMissile(playerOneBoard, salvoMode);
+      endGame = isEndGame(playerTwoBoard, playerOneBoard);
       if(endGame)break;
-      amountOfComputersMissiles--;
+      amountOfMissilesPlayerTwo--;
     }
-    cout << "\nEnter any key to finish the computers turn: ";
+    cout << "Enter any key to finish your turn: ";
     getline(cin, input);
+    system("clear");
   	} while(endGame != true);
     cout << "\nThe game has ended, I hope you had fun\n";
 }
