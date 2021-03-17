@@ -7,6 +7,7 @@ using namespace std;
 int getIntFromFile(stringstream& lineStream, char delimiter);
 void menu(void);
 bool isNo(string input);
+string convertToUpper(string word);
 
 
 //Header files
@@ -75,4 +76,12 @@ int getIntFromFile(stringstream& lineStream, char delimiter){
   getline(lineStream, value, delimiter);
   int convertedToInt = stoi(value);
   return convertedToInt;
+}
+
+string convertToUpper(string word){
+  for (int i=0; i < word.length() ; i++ ){ 
+      word[i] = toupper(word[i]);
+      //iterating through each character to convert it to lowercase
+  }
+  return word;
 }

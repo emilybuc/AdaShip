@@ -1,7 +1,7 @@
 #pragma once
 #include <iomanip>
 #include <string>
-#include <math.h>       /* floor */
+#include <math.h> //floor
 #include "boatConfig.h"
 
 class boardClass {
@@ -12,7 +12,6 @@ class boardClass {
     boatClass gameBoatsClass;
     vector <boat> boatList;
     bool showMines;
-    bool playersBoard;
     int tilesToHit;
   public:
     boardClass(){
@@ -26,9 +25,6 @@ class boardClass {
         vector<tile>temp;
         for(int yAxis = 0; yAxis <= boardCoordinates[1] - 1; yAxis++){
           temp.push_back({false, false, false});
-          // cout << "has ship: " << temp[yAxis].hasShip << endl;
-          // cout << "hit: " << temp[yAxis].hasShip << endl;
-          // cout << "hasMine: " << temp[yAxis].hasMine << endl;
         }
         board.push_back(temp);
       }
@@ -42,11 +38,17 @@ class boardClass {
           stringstream configStrStream(line);
           string lineType;
           getline(configStrStream, lineType, ':');
-          if(lineType == "Board"){
+          lineType = convertToUpper(lineType);
+          if(lineType == "BOARD"){
             int x = getIntFromFile(configStrStream, 'x');
             int y = getIntFromFile(configStrStream, 'x');
-            boardCoordinates[0] = x;
-            boardCoordinates[1] = y;
+            if(x <= 80 && y <= 80 && x >= 5 && x >= 5){
+              boardCoordinates[0] = x;
+              boardCoordinates[1] = y;
+            } else {
+              cout << "\nBoard needs to be between 5 and 80 height and width\nPlease reconfigure the 'adaship_config.ini' file\nExiting\n";
+              exit(0);
+            }
           }
         }
       }
@@ -81,7 +83,7 @@ class boardClass {
             cout << "\t" << board[j][i].hit;
           } else if (board[j][i].hit == 'M'){
             cout <<"\t" << board[j][i].hit;
-          } else if (board[j][i].hasShip && playersBoard){
+          } else if (board[j][i].hasShip){
             cout <<"\t" << board[j][i].hasShip;
           } else if (board[j][i].hasMine == true && showMines == true){
             cout << "\t" << "M" << setw(2);
@@ -96,7 +98,6 @@ class boardClass {
 
     void setShipsMenu(){
       string input = "-1"; //declare and initialise an integer type variable
-      playersBoard = true;
 	    do { //set up a continuous loop
         cout << "\nPlease choose from the following options\n1. Set boats manually\n2. Automatically set boats \n0. Quit\n\n";
         getline(cin, input);
@@ -180,7 +181,6 @@ class boardClass {
           return false;
         }
       }
-      cout << coordinates[0] << ", " << coordinates[1] << endl;
       if(validateCoord(coordinates)){
         return true;
       } else {
@@ -265,15 +265,22 @@ class boardClass {
       }
     }
     void autoSetShips(int i){
+      int amountOfTimesTried = 0;
       for (int j = i; j < boatList.size(); j++){
         randomCoordinates();
         int movementOnXorY = rand() % 2;
         int randomNumber = rand() % 4;
-        
-        if(!validateBoatPlacement(boatList[j], movementOnXorY, -1)){
+        // cout << amountOfTimesTried;
+        if(!validateBoatPlacement(boatList[j], movementOnXorY, -1) && amountOfTimesTried <= 100){
           resetCoord();
           j--;
+          amountOfTimesTried++;
+          // cout << amountOfTimesTried << ", ";
+        } else if(amountOfTimesTried > 100) {
+          cout << "\nAmount of ships that can be placed has been met, please continue with set-up\n";
+          break;
         } else {
+          amountOfTimesTried = 0;
           resetCoord();
         }
       }
@@ -308,7 +315,6 @@ class boardClass {
     }
     void computerPlayerBoard(){
       //maybe change this to a variable so its easier to understand
-      playersBoard = true;
       autoSetShips(0);
     }
     int* getCoordinates(){
