@@ -11,13 +11,12 @@ class boardClass {
     int coordinates[2];
     boatClass gameBoatsClass;
     vector <boat> boatList;
-    bool showMines;
     int tilesToHit;
   public:
     boardClass(){
       getConfigBoard();
+      gameBoatsClass.boatsFitOnBoard(boardCoordinates);
       boatList = gameBoatsClass.getBoats();
-      showMines = false;
       coordinates[0] = 0;
       coordinates[1] = 0;
       tilesToHit = 0;
@@ -55,7 +54,7 @@ class boardClass {
 			config.close();
 		}
     void outputBoard(){
-      //change function to output AA and BA etc doesnt work atm
+      //change function to output AA and AB etc doesn't work atm
       cout << "  ";
       int alpha = 26;
       for (char letter = 'A'; letter <= boardCoordinates[1] + 64; letter++){
@@ -83,10 +82,12 @@ class boardClass {
             cout << "\t" << board[j][i].hit;
           } else if (board[j][i].hit == 'M'){
             cout <<"\t" << board[j][i].hit;
+          } else if (board[j][i].hasShip && board[j][i].hasMine == true){
+            cout << "  " << board[j][i].hasShip << "/Ø";
           } else if (board[j][i].hasShip){
             cout <<"\t" << board[j][i].hasShip;
-          } else if (board[j][i].hasMine == true && showMines == true){
-            cout << "\t" << "M" << setw(2);
+          } else if (board[j][i].hasMine == true){
+            cout << "\t" << "Ø" << setw(2);
           } else if(!board[j][i].hit){
             cout << "\t" << "-" ;
           } 
@@ -99,8 +100,9 @@ class boardClass {
     void setShipsMenu(){
       string input = "-1"; //declare and initialise an integer type variable
 	    do { //set up a continuous loop
-        cout << "\nPlease choose from the following options\n1. Set boats manually\n2. Automatically set boats \n0. Quit\n\n";
+        cout << "\nPlease choose from the following options\n1. Set boats manually\n2. Automatically set boats \n0. Quit\n\nOption: ";
         getline(cin, input);
+        cout << endl;
         if(isNo(input)){
           int inputInt = stoi(input);
           switch(inputInt){
@@ -108,7 +110,7 @@ class boardClass {
               for (int i = 0; i < boatList.size(); i++){
                 outputBoard();
                 string choice, option;
-                cout << "\nPlease choose an option: \n(M) Manually place next boat\n(A) Auto-place the rest of the boats\n(Q) Quit\nOption:";
+                cout << "\nPlease choose an option: \n(M) Manually place next boat\n(A) Auto-place the rest of the boats\n(S) Stop placing ships\n(Q) Quit\nOption:";
                 getline(cin, option);
                 //instead of doing 2 menus maybe do one and validate if they've inputted A or Q if they want to quit instead of 2 menus 
                 if(option == "M" || option == "m"){
@@ -136,6 +138,9 @@ class boardClass {
                 } else if (option == "Q" || option == "q"){
                   //this doesnt work
                   input = "0";
+                } else if(option == "S" || option == "s"){
+                  //This option can be used if the user has a large amount of boats that could potentially fit on the board as this is checked beforehand but they havent placed them in an optimised way so they can carry on with the game
+                  break;
                 } else {
                     cout << "\n'" << option << "' Is an invalid option  - please try again.\n";
                     i--;
@@ -156,7 +161,6 @@ class boardClass {
             };
         } 
       } while(input != "0");
-      showMines = true;
     }
     bool validateInput(string input){
       int convertCharToCoord = 65;
@@ -321,7 +325,20 @@ class boardClass {
       return coordinates;
     }
     bool setHit(){
-      if(board[coordinates[0]][coordinates[1]].hasShip){
+      cout << "\nsetHit: "<<coordinates[0] << ", " << coordinates[1] << endl;
+      if(board[coordinates[0]][coordinates[1]].hasShip && board[coordinates[0]][coordinates[1]].hasMine){
+        board[coordinates[0]][coordinates[1]].hit = 'H';
+        cout << "\nhit coord: "<<board[coordinates[0]][coordinates[1]].hit << endl;
+        tilesToHit--;
+        mineExplosion();
+        resetCoord();
+        return true;
+      } else if(board[coordinates[0]][coordinates[1]].hasMine){
+        board[coordinates[0]][coordinates[1]].hit = 'H';
+        mineExplosion();
+        resetCoord();
+        return true;
+      } else if(board[coordinates[0]][coordinates[1]].hasShip){
         board[coordinates[0]][coordinates[1]].hit = 'H';
         tilesToHit--;
         resetCoord();
@@ -372,6 +389,42 @@ class boardClass {
       }
       return numOfBoatsNotSunk;
     }
+    void setMines(){
+      cout << "\nCurrently placing mines...\nPlease note that mines are indicated with a Ø\n\n";
+      //I used a different symbol for the mines than just the M character because of the overlap with the symbol used for miss.
+      int loop = 5;
+      while(loop != 0){
+        // cout << loop << endl;
+        randomCoordinates();
+        if(board[coordinates[0]][coordinates[1]].hasMine == false){
+          board[coordinates[0]][coordinates[1]].hasMine = true;
+          loop--;
+        }
+        resetCoord();
+      }
+    }
+    void mineExplosion(){
+      int localCoord[] = { coordinates[0], coordinates[1] }; 
+      updateCoordToNewCoord(localCoord, -1, -1);
+      updateCoordToNewCoord(localCoord, -1, 0);
+      updateCoordToNewCoord(localCoord, -1, 1);
+      updateCoordToNewCoord(localCoord, 0, -1);
+      updateCoordToNewCoord(localCoord, 0, 1);
+      updateCoordToNewCoord(localCoord, 1, -1);
+      updateCoordToNewCoord(localCoord, 1, 0);
+      updateCoordToNewCoord(localCoord, 1, 1);
+    }
+    void updateCoordToNewCoord(int* localCoord, int xAxisMovement, int yAxisMovement){
+      coordinates[0] += xAxisMovement;
+      coordinates[1] += yAxisMovement;
+      cout << "coordinates: "<< coordinates[0] << ", " << coordinates[1] << endl;
+      if(validateCoord(coordinates)){
+        setHit();
+      }
+      coordinates[0] = localCoord[0];
+      coordinates[1] = localCoord[1];
+    }
 };
 
 //board.h
+      // cout <<"\n coord inside mine explosion " << coordinates[0] << ", " << coordinates[1] << endl;< endl;
