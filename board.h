@@ -1,7 +1,7 @@
 #pragma once
 #include <iomanip>
 #include <string>
-#include <math.h>       /* floor */
+#include <math.h> //floor
 #include "boatConfig.h"
 
 class boardClass {
@@ -11,14 +11,12 @@ class boardClass {
     int coordinates[2];
     boatClass gameBoatsClass;
     vector <boat> boatList;
-    bool showMines;
-    bool playersBoard;
     int tilesToHit;
   public:
     boardClass(){
       getConfigBoard();
+      gameBoatsClass.boatsFitOnBoard(boardCoordinates);
       boatList = gameBoatsClass.getBoats();
-      showMines = false;
       coordinates[0] = 0;
       coordinates[1] = 0;
       tilesToHit = 0;
@@ -26,9 +24,6 @@ class boardClass {
         vector<tile>temp;
         for(int yAxis = 0; yAxis <= boardCoordinates[1] - 1; yAxis++){
           temp.push_back({false, false, false});
-          // cout << "has ship: " << temp[yAxis].hasShip << endl;
-          // cout << "hit: " << temp[yAxis].hasShip << endl;
-          // cout << "hasMine: " << temp[yAxis].hasMine << endl;
         }
         board.push_back(temp);
       }
@@ -42,35 +37,43 @@ class boardClass {
           stringstream configStrStream(line);
           string lineType;
           getline(configStrStream, lineType, ':');
-          if(lineType == "Board"){
+          lineType = convertToUpper(lineType);
+          if(lineType == "BOARD"){
             int x = getIntFromFile(configStrStream, 'x');
             int y = getIntFromFile(configStrStream, 'x');
-            boardCoordinates[0] = x;
-            boardCoordinates[1] = y;
+            if(x <= 80 && y <= 80 && x >= 5 && x >= 5){
+              boardCoordinates[0] = x;
+              boardCoordinates[1] = y;
+            } else {
+              cout << "\nBoard needs to be between 5 and 80 height and width\nPlease reconfigure the 'adaship_config.ini' file\nExiting\n";
+              exit(0);
+            }
           }
         }
       }
 			config.close();
 		}
     void outputBoard(){
-      //change function to output AA and BA etc doesnt work atm
+      //change function to output AA and AB etc doesn't work atm
       cout << "  ";
-      int alpha = 26;
-      for (char letter = 'A'; letter <= boardCoordinates[1] + 64; letter++){
-        // int variation = floor(letter / alpha);
-          cout << "\t" << letter;
-        // } else if (variation == 3){
-        //   char secondletter = letter - (variation * alpha);
-        //   cout << "\t" << "A" << secondletter;
-        // } else if (variation == 4){
-        //   char secondletter = letter - (variation * alpha);
-        //   cout << "\t" << "B" << secondletter;
-        // } else if (variation == 5){
-        //   char secondletter = letter - (variation * alpha);
-        //   cout << "\t" << "C" << secondletter;
-        // }
+      int alpha = 64;
+      for (int i = 0; i < boardCoordinates[1]; i++){
+          if(i <= 25){
+            char letter = 'A';
+            letter = letter + i;
+            cout << "\t" << letter;
+          } else if(i <= 51){
+            int variation = i - 26;
+            char letter = 'A';
+            letter = letter + variation;
+            cout << "  A" << letter;
+          } else if(i <= 77){
+            int variation = i - 52;
+            char letter = 'A';
+            letter = letter + variation;
+            cout << "  B" << letter;
+          }
       }
-      // board[0][0].hasMine = true;
       cout << endl;
       for (int i = 0; i < board.size(); i++){
         int rowNumbers = i + 1;
@@ -81,10 +84,12 @@ class boardClass {
             cout << "\t" << board[j][i].hit;
           } else if (board[j][i].hit == 'M'){
             cout <<"\t" << board[j][i].hit;
-          } else if (board[j][i].hasShip && playersBoard){
+          } else if (board[j][i].hasShip && board[j][i].hasMine == true){
+            cout << "  " << board[j][i].hasShip << "/Ø";
+          } else if (board[j][i].hasShip){
             cout <<"\t" << board[j][i].hasShip;
-          } else if (board[j][i].hasMine == true && showMines == true){
-            cout << "\t" << "M" << setw(2);
+          } else if (board[j][i].hasMine == true){
+            cout << "\t" << "Ø" << setw(2);
           } else if(!board[j][i].hit){
             cout << "\t" << "-" ;
           } 
@@ -96,10 +101,10 @@ class boardClass {
 
     void setShipsMenu(){
       string input = "-1"; //declare and initialise an integer type variable
-      playersBoard = true;
 	    do { //set up a continuous loop
-        cout << "\nPlease choose from the following options\n1. Set boats manually\n2. Automatically set boats \n0. Quit\n\n";
+        cout << "\nPlease choose from the following options\n1. Set boats manually\n2. Automatically set boats \n0. Quit\n\nOption: ";
         getline(cin, input);
+        cout << endl;
         if(isNo(input)){
           int inputInt = stoi(input);
           switch(inputInt){
@@ -107,7 +112,7 @@ class boardClass {
               for (int i = 0; i < boatList.size(); i++){
                 outputBoard();
                 string choice, option;
-                cout << "\nPlease choose an option: \n(M) Manually place next boat\n(A) Auto-place the rest of the boats\n(Q) Quit\nOption:";
+                cout << "\nPlease choose an option: \n(M) Manually place next boat\n(A) Auto-place the rest of the boats\n(S) Stop placing ships\n(Q) Quit\nOption:";
                 getline(cin, option);
                 //instead of doing 2 menus maybe do one and validate if they've inputted A or Q if they want to quit instead of 2 menus 
                 if(option == "M" || option == "m"){
@@ -135,6 +140,9 @@ class boardClass {
                 } else if (option == "Q" || option == "q"){
                   //this doesnt work
                   input = "0";
+                } else if(option == "S" || option == "s"){
+                  //This option can be used if the user has a large amount of boats that could potentially fit on the board as this is checked beforehand but they havent placed them in an optimised way so they can carry on with the game
+                  break;
                 } else {
                     cout << "\n'" << option << "' Is an invalid option  - please try again.\n";
                     i--;
@@ -155,14 +163,12 @@ class boardClass {
             };
         } 
       } while(input != "0");
-      showMines = true;
     }
     bool validateInput(string input){
       int convertCharToCoord = 65;
       int convertIntToCoord = 48;
       for (int i = 0; i < input.size(); i++){
         if(isalpha(input[i])){
-          cout << input[i] << endl;
           int uppercaseChar = toupper(input[i]);
           coordinates[0] += (uppercaseChar - convertCharToCoord);
         } else if(isdigit(input[i])){
@@ -180,7 +186,6 @@ class boardClass {
           return false;
         }
       }
-      cout << coordinates[0] << ", " << coordinates[1] << endl;
       if(validateCoord(coordinates)){
         return true;
       } else {
@@ -265,15 +270,22 @@ class boardClass {
       }
     }
     void autoSetShips(int i){
+      int amountOfTimesTried = 0;
       for (int j = i; j < boatList.size(); j++){
         randomCoordinates();
         int movementOnXorY = rand() % 2;
         int randomNumber = rand() % 4;
-        
-        if(!validateBoatPlacement(boatList[j], movementOnXorY, -1)){
+        // cout << amountOfTimesTried;
+        if(!validateBoatPlacement(boatList[j], movementOnXorY, -1) && amountOfTimesTried <= 100){
           resetCoord();
           j--;
+          amountOfTimesTried++;
+          // cout << amountOfTimesTried << ", ";
+        } else if(amountOfTimesTried > 100) {
+          cout << "\nAmount of ships that can be placed has been met, please continue with set-up\n";
+          break;
         } else {
+          amountOfTimesTried = 0;
           resetCoord();
         }
       }
@@ -308,14 +320,24 @@ class boardClass {
     }
     void computerPlayerBoard(){
       //maybe change this to a variable so its easier to understand
-      playersBoard = true;
       autoSetShips(0);
     }
     int* getCoordinates(){
       return coordinates;
     }
     bool setHit(){
-      if(board[coordinates[0]][coordinates[1]].hasShip){
+      if(board[coordinates[0]][coordinates[1]].hasShip && board[coordinates[0]][coordinates[1]].hasMine){
+        board[coordinates[0]][coordinates[1]].hit = 'H';
+        tilesToHit--;
+        mineExplosion();
+        resetCoord();
+        return true;
+      } else if(board[coordinates[0]][coordinates[1]].hasMine){
+        board[coordinates[0]][coordinates[1]].hit = 'H';
+        mineExplosion();
+        resetCoord();
+        return true;
+      } else if(board[coordinates[0]][coordinates[1]].hasShip){
         board[coordinates[0]][coordinates[1]].hit = 'H';
         tilesToHit--;
         resetCoord();
@@ -343,6 +365,65 @@ class boardClass {
       } 
       return false;
     }
+    int salvoMode(){
+      int c = 0, b = 0, d = 0, s = 0, p = 0, numOfBoatsNotSunk = 0;
+      for (int i = 0; i < board.size(); i++){
+        for (int j = 0; j < board[i].size(); j++){
+           if (board[i][j].hit == false && board[i][j].hasShip){
+            switch(board[i][j].hasShip) {
+              case 'C': c++; break; 
+              case 'B': b++; break;
+              case 'D': d++; break;
+              case 'S': s++; break;
+              case 'P': p++; break;
+            }
+          } 
+        }
+      }
+      int boatsNotSunk[] = {c,b,d,s,p}; 
+      for (int i = 0; i < 5; i++){ 
+        if(boatsNotSunk[i] != 0){
+          numOfBoatsNotSunk++;
+        }
+      }
+      return numOfBoatsNotSunk;
+    }
+    void setMines(){
+      cout << "\nCurrently placing mines...\nPlease note that mines are indicated with a Ø\n\n";
+      //I used a different symbol for the mines than just the M character because of the overlap with the symbol used for miss.
+      int loop = 5;
+      while(loop != 0){
+        // cout << loop << endl;
+        randomCoordinates();
+        if(board[coordinates[0]][coordinates[1]].hasMine == false){
+          board[coordinates[0]][coordinates[1]].hasMine = true;
+          loop--;
+        }
+        resetCoord();
+      }
+    }
+    void mineExplosion(){
+      int localCoord[] = { coordinates[0], coordinates[1] }; 
+      updateCoordToNewCoord(localCoord, -1, -1);
+      updateCoordToNewCoord(localCoord, -1, 0);
+      updateCoordToNewCoord(localCoord, -1, 1);
+      updateCoordToNewCoord(localCoord, 0, -1);
+      updateCoordToNewCoord(localCoord, 0, 1);
+      updateCoordToNewCoord(localCoord, 1, -1);
+      updateCoordToNewCoord(localCoord, 1, 0);
+      updateCoordToNewCoord(localCoord, 1, 1);
+    }
+    void updateCoordToNewCoord(int* localCoord, int xAxisMovement, int yAxisMovement){
+      coordinates[0] += xAxisMovement;
+      coordinates[1] += yAxisMovement;
+      if(validateCoord(coordinates)){
+        setHit();
+      }
+      coordinates[0] = localCoord[0];
+      coordinates[1] = localCoord[1];
+      // when a mine hits another mine then it errors, that is because theres two of the same function running.
+    }
 };
 
 //board.h
+      // cout <<"\n coord inside mine explosion " << coordinates[0] << ", " << coordinates[1] << endl;< endl;

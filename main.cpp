@@ -7,6 +7,7 @@ using namespace std;
 int getIntFromFile(stringstream& lineStream, char delimiter);
 void menu(void);
 bool isNo(string input);
+string convertToUpper(string word);
 
 
 //Header files
@@ -15,8 +16,8 @@ bool isNo(string input);
 
 int main() {
   srand((unsigned) time(NULL));
+  //to get a random number by using the time
   menu();
-  // OneVsComp();
   return 0;
 }
 
@@ -26,6 +27,10 @@ void menu(void) {
 		cout << "\nAdaShip! not like battleships in anyway:\n";
 		cout << "\t1. One player v computer game\n";
     cout << "\t2. Two player game\n";
+    cout << "\t3. One player v computer game (salvo)\n";
+    cout << "\t4. Two player game (salvo)\n";
+    cout << "\t5. One player v computer (hidden mines) game\n";
+    cout << "\t6. Two player (hidden mines) game\n";
 
 		cout << "\n\t0. Quit\n";
 
@@ -37,6 +42,11 @@ void menu(void) {
       switch(choiceInt) {
         case 1: oneVsComp(); break;
         case 2: twoPlayerGame(); break;
+        case 3: oneVsCompSalvo(); break;
+        case 4: twoPlayerGameSalvo(); break;
+        case 5: oneVsCompMines(); break;
+        case 6: twoPlayerGameMines(); break;
+        
         case 0: cout << "Exiting"; break;
         default:
           cout << "\n'" << choice << "' Is an invalid option  - please try again.";
@@ -69,4 +79,12 @@ int getIntFromFile(stringstream& lineStream, char delimiter){
   getline(lineStream, value, delimiter);
   int convertedToInt = stoi(value);
   return convertedToInt;
+}
+
+string convertToUpper(string word){
+  for (int i=0; i < word.length() ; i++ ){ 
+      word[i] = toupper(word[i]);
+      //iterating through each character to convert it to lowercase
+  }
+  return word;
 }
