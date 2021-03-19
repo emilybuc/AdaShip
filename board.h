@@ -54,24 +54,24 @@ class boardClass {
 			config.close();
 		}
     void outputBoard(){
-      //change function to output AA and AB etc doesn't work atm
       cout << "  ";
-      int alpha = 64;
       for (int i = 0; i < boardCoordinates[1]; i++){
+        char letter = 'A';
           if(i <= 25){
-            char letter = 'A';
             letter = letter + i;
             cout << "\t" << letter;
           } else if(i <= 51){
             int variation = i - 26;
-            char letter = 'A';
             letter = letter + variation;
             cout << "  A" << letter;
           } else if(i <= 77){
             int variation = i - 52;
-            char letter = 'A';
             letter = letter + variation;
             cout << "  B" << letter;
+          } else if(i <= 103){
+            int variation = i - 78;
+            letter = letter + variation;
+            cout << "  C" << letter;
           }
       }
       cout << endl;
