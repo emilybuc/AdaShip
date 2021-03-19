@@ -43,16 +43,3 @@ bool isEndGame(boardClass &playersBoard, boardClass &computerBoard){
   return false;
 }
 
-void computerShootMissile(boardClass &board, bool salvoMode){
-  board.randomCoordinates();
-  if(board.setHit()){
-      cout << "\nComputers missile hit!\n";
-    } else {
-    cout << "\nComputers missile missed\n";
-  }
-  string endTurn;
-  if(!salvoMode){
-    cout << "Enter any key to finish the computers turn: ";
-    getline(cin, endTurn);
-  }
-}

@@ -56,22 +56,24 @@ class boardClass {
     void outputBoard(){
       //change function to output AA and AB etc doesn't work atm
       cout << "  ";
-      int alpha = 26;
-      for (char letter = 'A'; letter <= boardCoordinates[1] + 64; letter++){
-        // int variation = floor(letter / alpha);
-          cout << "\t" << letter;
-        // } else if (variation == 3){
-        //   char secondletter = letter - (variation * alpha);
-        //   cout << "\t" << "A" << secondletter;
-        // } else if (variation == 4){
-        //   char secondletter = letter - (variation * alpha);
-        //   cout << "\t" << "B" << secondletter;
-        // } else if (variation == 5){
-        //   char secondletter = letter - (variation * alpha);
-        //   cout << "\t" << "C" << secondletter;
-        // }
+      int alpha = 64;
+      for (int i = 0; i < boardCoordinates[1]; i++){
+          if(i <= 25){
+            char letter = 'A';
+            letter = letter + i;
+            cout << "\t" << letter;
+          } else if(i <= 51){
+            int variation = i - 26;
+            char letter = 'A';
+            letter = letter + variation;
+            cout << "  A" << letter;
+          } else if(i <= 77){
+            int variation = i - 52;
+            char letter = 'A';
+            letter = letter + variation;
+            cout << "  B" << letter;
+          }
       }
-      // board[0][0].hasMine = true;
       cout << endl;
       for (int i = 0; i < board.size(); i++){
         int rowNumbers = i + 1;
@@ -167,7 +169,6 @@ class boardClass {
       int convertIntToCoord = 48;
       for (int i = 0; i < input.size(); i++){
         if(isalpha(input[i])){
-          cout << input[i] << endl;
           int uppercaseChar = toupper(input[i]);
           coordinates[0] += (uppercaseChar - convertCharToCoord);
         } else if(isdigit(input[i])){
@@ -325,10 +326,8 @@ class boardClass {
       return coordinates;
     }
     bool setHit(){
-      cout << "\nsetHit: "<<coordinates[0] << ", " << coordinates[1] << endl;
       if(board[coordinates[0]][coordinates[1]].hasShip && board[coordinates[0]][coordinates[1]].hasMine){
         board[coordinates[0]][coordinates[1]].hit = 'H';
-        cout << "\nhit coord: "<<board[coordinates[0]][coordinates[1]].hit << endl;
         tilesToHit--;
         mineExplosion();
         resetCoord();
@@ -417,12 +416,12 @@ class boardClass {
     void updateCoordToNewCoord(int* localCoord, int xAxisMovement, int yAxisMovement){
       coordinates[0] += xAxisMovement;
       coordinates[1] += yAxisMovement;
-      cout << "coordinates: "<< coordinates[0] << ", " << coordinates[1] << endl;
       if(validateCoord(coordinates)){
         setHit();
       }
       coordinates[0] = localCoord[0];
       coordinates[1] = localCoord[1];
+      // when a mine hits another mine then it errors, that is because theres two of the same function running.
     }
 };
 

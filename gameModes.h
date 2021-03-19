@@ -1,11 +1,14 @@
 #pragma once
 #include "gameFuncs.h"
+#include "computerTargeting.h"
 
 void oneVsComp(){
   bool endGame = false;
   boardClass playersBoard;
   playersBoard.setShipsMenu();
+
   boardClass computerBoard;
+  computerTargeting computerPlayer;
   computerBoard.computerPlayerBoard();
   bool notSalvoMode = false;
 
@@ -26,7 +29,7 @@ void oneVsComp(){
     computerBoard.outputBoard();
     cout << "\nTarget Board\n";
     playersBoard.outputBoard();
-    computerShootMissile(playersBoard, notSalvoMode);
+    computerPlayer.shootMissile(playersBoard, notSalvoMode);
     endGame = isEndGame(playersBoard, computerBoard);
   	} while(endGame != true);
     cout << "\nThe game has ended, I hope you had fun\n";
@@ -73,7 +76,9 @@ void oneVsCompSalvo(){
   bool salvoMode = true;
   boardClass playersBoard;
   playersBoard.setShipsMenu();
+
   boardClass computerBoard;
+  computerTargeting computerPlayer;
   computerBoard.computerPlayerBoard();
   bool endGame = false;
   system("clear");
@@ -105,7 +110,7 @@ void oneVsCompSalvo(){
     int amountOfComputersMissiles = computerBoard.salvoMode();
     cout << "The computer has (" << amountOfComputersMissiles << ") Missile(s)";
     while(amountOfComputersMissiles != 0){
-      computerShootMissile(playersBoard, salvoMode);
+      computerPlayer.shootMissile(playersBoard, salvoMode);
       endGame = isEndGame(playersBoard, computerBoard);
       if(endGame)break;
       amountOfComputersMissiles--;
@@ -186,6 +191,7 @@ void oneVsCompMines(){
 
   //set up for the computer player 
   boardClass computerBoard;
+  computerTargeting computerPlayer;
   computerBoard.computerPlayerBoard();
   computerBoard.setMines();
 
@@ -206,8 +212,60 @@ void oneVsCompMines(){
     computerBoard.outputBoard();
     cout << "\nTarget Board\n";
     playersBoard.outputBoard();
-    computerShootMissile(playersBoard, notSalvoMode);
+    computerPlayer.shootMissile(playersBoard, notSalvoMode);
     endGame = isEndGame(playersBoard, computerBoard);
+  	} while(endGame != true);
+    cout << "\nThe game has ended, I hope you had fun\n";
+}
+
+void twoPlayerGameMines(){
+  bool endGame = false;
+  bool notSalvoMode = false;
+  string input;
+
+  //set up for the first player
+  cout << "\t\t\tPlayer one set up!";
+  system("clear");
+  boardClass playerOneBoard;
+  playerOneBoard.setShipsMenu();
+  playerOneBoard.setMines();
+  playerOneBoard.outputBoard();
+  cout << "\nYour mines have been placed, enter any key to continue: ";
+  getline(cin, input);
+  system("clear");
+
+  //set up for the second player
+  system("clear");
+  cout << "\t\t\tPlayer two set up!";
+  boardClass playerTwoBoard;
+  playerTwoBoard.setShipsMenu();
+  playerTwoBoard.setMines();
+  playerTwoBoard.outputBoard();
+  cout << "\nYour mines have been placed, enter any key to continue: ";
+  getline(cin, input);
+
+  system("clear");
+
+  cout << "\t\t\tLet the game commence!\n";
+	do { //set up a continuous loop
+    system("clear");
+    cout << "Player One's Turn\n\nYour Board\n";
+    playerOneBoard.outputBoard();
+    cout << "\nTarget Board\n";
+    playerTwoBoard.outputBoard();
+    endGame = playerShootMissile(playerTwoBoard, notSalvoMode);
+    endGame = isEndGame(playerOneBoard, playerTwoBoard);
+    if(endGame)break;
+    //exit out of function if the game has been exited or won by the player before moving on
+    system("clear");
+    cout << "Player Two's Turn\n\nYour Board\n";
+    playerTwoBoard.outputBoard();
+    cout << "\nTarget Board\n";
+    playerOneBoard.outputBoard();
+    endGame = playerShootMissile(playerOneBoard, notSalvoMode);
+    endGame = isEndGame(playerTwoBoard, playerOneBoard);
+    if(endGame)break;
+    system("clear");
   	} while(endGame != true);
     cout << "\nThe game has ended, I hope you had fun\n";
 }

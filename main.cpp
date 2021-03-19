@@ -18,7 +18,6 @@ int main() {
   srand((unsigned) time(NULL));
   //to get a random number by using the time
   menu();
-  // OneVsComp();
   return 0;
 }
 
@@ -46,6 +45,7 @@ void menu(void) {
         case 3: oneVsCompSalvo(); break;
         case 4: twoPlayerGameSalvo(); break;
         case 5: oneVsCompMines(); break;
+        case 6: twoPlayerGameMines(); break;
         
         case 0: cout << "Exiting"; break;
         default:
