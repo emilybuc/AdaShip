@@ -6,7 +6,7 @@ class computerTargeting {
       int x;
       int y;
       bool hit;
-      string howFound;
+      string foundShip;
     };
     vector <coordinates> coordOfhit;
 
@@ -14,7 +14,7 @@ class computerTargeting {
   computerTargeting(){}
 
   void shootMissile(boardClass &board, bool salvoMode){
-    // if(coordOfhit[0].x && coordOfhit[1].y){
+    // if(coordOfhit[coordOfhit.size()-1].foundShip){
     //   seekTarget();
     // } else {
       board.randomCoordinates();
@@ -28,7 +28,7 @@ class computerTargeting {
         localCoords[1],
         true,
        });
-      cout << coordOfhit[0].x << ", "<< coordOfhit[0].y;
+      // cout << coordOfhit[0].x << ", "<< coordOfhit[0].y;
       cout << "\nComputers missile hit!\n";
       } else {
       coordOfhit.push_back({
@@ -45,7 +45,7 @@ class computerTargeting {
     }
   }
   void seekTarget(){
-    // coordOfhit[0].x;
-    // coordOfhit[0].y;
+    int coordOfhitSize = coordOfhit.size() - 1;
+    
   }
 };

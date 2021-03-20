@@ -164,28 +164,55 @@ class boardClass {
         } 
       } while(input != "0");
     }
+
+
+
+    
     bool validateInput(string input){
       int convertCharToCoord = 65;
       int convertIntToCoord = 48;
+      string xCoord, yCoord;
       for (int i = 0; i < input.size(); i++){
         if(isalpha(input[i])){
-          int uppercaseChar = toupper(input[i]);
-          coordinates[0] += (uppercaseChar - convertCharToCoord);
+          xCoord += input[i];
         } else if(isdigit(input[i])){
-          if(isdigit(input[i + 1])){
-            int firstDigit = convertArrayToInt(input[i]) * 10;
-            int secondDigit = convertArrayToInt(input[i + 1]);
-            int finalNum = (firstDigit + secondDigit);
-            coordinates[1] = finalNum - 1;
-            break;
-          } else {
-            coordinates[1] = convertArrayToInt(input[i]) - 1;
-          }
+          yCoord += input[i];
         } else {
           resetCoord();
           return false;
         }
       }
+
+      int xCoordInt = 0;
+      xCoord = convertToUpper(xCoord);
+
+      for (int i = 0 ; i < xCoord.length(); i++){
+        if(xCoord.length() == 1){
+          xCoordInt = (xCoord[i] - convertCharToCoord);
+
+        } else if (xCoord.length() == 2){
+          switch (i){
+            case 0:
+             if(xCoord[i] == 'A'){
+               xCoordInt += 26;
+             } else if (xCoord[i] == 'B'){
+               xCoordInt += 52;
+             } else if (xCoord[i] == 'C'){
+               xCoordInt += 78;
+             }
+              break;
+            case 1:
+              xCoordInt += (xCoord[i] - convertCharToCoord);
+              break;
+          }
+        } else {
+          return false;
+        }
+      }
+      coordinates[0] = xCoordInt;
+      coordinates[1] = stoi(yCoord) - 1;
+      cout << "coordinates: " << coordinates[0] << ", " << coordinates[1] << endl;
+
       if(validateCoord(coordinates)){
         return true;
       } else {
@@ -193,6 +220,10 @@ class boardClass {
         return false;
       }
     }
+
+
+
+
     int convertArrayToInt(int input){
       int convertToInt = 48;
       string inputToString = to_string(input);
@@ -419,9 +450,22 @@ class boardClass {
       if(validateCoord(coordinates)){
         setHit();
       }
-      coordinates[0] = localCoord[0];
-      coordinates[1] = localCoord[1];
-      // when a mine hits another mine then it errors, that is because theres two of the same function running.
+      // if(mineFunction){
+        coordinates[0] = localCoord[0];
+        coordinates[1] = localCoord[1];
+        // when a mine hits another mine then it errors, that is because theres two of the same function running.
+      // } else {
+      //   resetCoord();
+      // }
+    }
+    bool seekCoords(int x, int y){
+      coordinates[0] = x; 
+      coordinates[1] = y;
+      if(validateCoord(coordinates)){
+        setHit();
+      } else {
+        return false;
+      }
     }
 };
 
