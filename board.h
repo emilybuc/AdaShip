@@ -458,11 +458,11 @@ class boardClass {
       //   resetCoord();
       // }
     }
-    bool seekCoords(int x, int y){
+    bool setCoordinates(int x, int y){
       coordinates[0] = x; 
       coordinates[1] = y;
       if(validateCoord(coordinates)){
-        setHit();
+        return true;
       } else {
         return false;
       }
@@ -470,4 +470,3 @@ class boardClass {
 };
 
 //board.h
-      // cout <<"\n coord inside mine explosion " << coordinates[0] << ", " << coordinates[1] << endl;< endl;
