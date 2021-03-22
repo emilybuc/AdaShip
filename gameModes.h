@@ -25,9 +25,10 @@ void oneVsComp(){
 
     endGame = playerShootMissile(computerBoard);
     //if they shoot and they press Q then set end game to true
-    endGame = isEndGame(playersBoard, computerBoard);
-    //check the state
     if(endGame)break;
+    endGame = isEndGame(playersBoard, computerBoard);
+    if(endGame)break;
+    //check the state
     //exit out of function if the game has been exited or won by the player before moving on
 
     cout << "\nComputers Turn\n";
@@ -61,6 +62,7 @@ void twoPlayerGame(){
     cout << "\nTarget Board\n";
     playerTwoBoard.outputBoard();
     endGame = playerShootMissile(playerTwoBoard);
+    if(endGame)break;
     endGame = isEndGame(playerOneBoard, playerTwoBoard);
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on
@@ -103,6 +105,7 @@ void oneVsCompSalvo(){
       //output the number of missiles the player has
       endGame = playerShootMissile(computerBoard, true);
       //this will loop for as long as the player has missiles
+      if(endGame)break;
       endGame = isEndGame(playersBoard, computerBoard);
       if(endGame)break;
       amountOfMissiles--;
@@ -157,6 +160,7 @@ void twoPlayerGameSalvo(){
       playerTwoBoard.outputBoard();
       cout << "You have (" << amountOfMissilesPlayerOne << ") Missile(s)";
       endGame = playerShootMissile(playerTwoBoard, salvoMode);
+      if(endGame)break;
       endGame = isEndGame(playerOneBoard, playerTwoBoard);
       if(endGame)break;
       amountOfMissilesPlayerOne--;
@@ -176,6 +180,7 @@ void twoPlayerGameSalvo(){
       playerOneBoard.outputBoard();
       cout << "You have (" << amountOfMissilesPlayerTwo << ") Missile(s)";
       endGame = playerShootMissile(playerOneBoard, salvoMode);
+      if(endGame)break;
       endGame = isEndGame(playerTwoBoard, playerOneBoard);
       if(endGame)break;
       amountOfMissilesPlayerTwo--;
@@ -217,6 +222,7 @@ void oneVsCompMines(){
     cout << "\nTarget Board\n";
     computerBoard.outputBoard();
     endGame = playerShootMissile(computerBoard);
+    if(endGame)break;
     endGame = isEndGame(playersBoard, computerBoard);
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on
@@ -265,6 +271,7 @@ void twoPlayerGameMines(){
     cout << "\nTarget Board\n";
     playerTwoBoard.outputBoard();
     endGame = playerShootMissile(playerTwoBoard);
+    if(endGame)break;
     endGame = isEndGame(playerOneBoard, playerTwoBoard);
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on

@@ -13,7 +13,6 @@ string convertToUpper(string word);
 
 //Header files
 #include "gameModes.h"
-#include "board.h"
 
 int main() {
   srand((unsigned) time(NULL));
@@ -49,7 +48,7 @@ void menu(void) {
         case 5: oneVsCompMines(); break;
         case 6: twoPlayerGameMines(); break;
         case 7: compVsCompMines(); break;
-        
+        //all the functions to be called
         case 0: cout << "Exiting"; break;
         default:
           cout << "\n'" << choice << "' Is an invalid option  - please try again.";
