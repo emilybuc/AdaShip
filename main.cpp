@@ -2,6 +2,7 @@
 #include <fstream>//This allows my file to access a filestream
 #include <sstream>
 #include <string>
+#include <vector>
 using namespace std;
 
 int getIntFromFile(stringstream& lineStream, char delimiter);
@@ -12,7 +13,6 @@ string convertToUpper(string word);
 
 //Header files
 #include "gameModes.h"
-#include "board.h"
 
 int main() {
   srand((unsigned) time(NULL));
@@ -31,6 +31,7 @@ void menu(void) {
     cout << "\t4. Two player game (salvo)\n";
     cout << "\t5. One player v computer (hidden mines) game\n";
     cout << "\t6. Two player (hidden mines) game\n";
+    cout << "\t7. Computer v computer (hidden mines) game\n";
 
 		cout << "\n\t0. Quit\n";
 
@@ -46,7 +47,8 @@ void menu(void) {
         case 4: twoPlayerGameSalvo(); break;
         case 5: oneVsCompMines(); break;
         case 6: twoPlayerGameMines(); break;
-        
+        case 7: compVsCompMines(); break;
+        //all the functions to be called
         case 0: cout << "Exiting"; break;
         default:
           cout << "\n'" << choice << "' Is an invalid option  - please try again.";
@@ -63,12 +65,7 @@ bool isNo(string input){
   for (int i = input.length() - 1; i >= 0; i--){
     //looping through the string to find if its a digit, if it isnt then return false
     if(!isdigit(input[i])){
-      // if(input[i] == '-' && i == 0){
-      //   return true;
-      //   //Checking if the first digit is a - (for a minus number)
-      // }
       return false;
-      //if it isnt a digit then return 
     } 
   }
   return true;
@@ -77,14 +74,16 @@ bool isNo(string input){
 int getIntFromFile(stringstream& lineStream, char delimiter){
   string value;
   getline(lineStream, value, delimiter);
+  //the value from before the delimiter
   int convertedToInt = stoi(value);
+  //convert it to an int
   return convertedToInt;
 }
 
 string convertToUpper(string word){
   for (int i=0; i < word.length() ; i++ ){ 
       word[i] = toupper(word[i]);
-      //iterating through each character to convert it to lowercase
+      //iterating through each character to convert it to uppercase
   }
   return word;
 }
