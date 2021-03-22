@@ -28,31 +28,6 @@ class boardClass {
         board.push_back(temp);
       }
     }
-    void getConfigBoard() {
-			ifstream config;
-      config.open("adaship_config.ini");
-        if (config.is_open()){
-        string line;
-        while( getline(config,line)){
-          stringstream configStrStream(line);
-          string lineType;
-          getline(configStrStream, lineType, ':');
-          lineType = convertToUpper(lineType);
-          if(lineType == "BOARD"){
-            int x = getIntFromFile(configStrStream, 'x');
-            int y = getIntFromFile(configStrStream, 'x');
-            if(x <= 80 && y <= 80 && x >= 5 && x >= 5){
-              boardCoordinates[0] = x;
-              boardCoordinates[1] = y;
-            } else {
-              cout << "\nBoard needs to be between 5 and 80 height and width\nPlease reconfigure the 'adaship_config.ini' file\nExiting\n";
-              exit(0);
-            }
-          }
-        }
-      }
-			config.close();
-		}
     void outputBoard(){
       cout << "  ";
       for (int i = 0; i < boardCoordinates[1]; i++){
@@ -79,15 +54,14 @@ class boardClass {
         int rowNumbers = i + 1;
         cout << setw(2) << rowNumbers;
         for (int j = 0; j < board[i].size(); j++){
-          // cout << "Hit: "<<board[j][i].hit << "\nHas Ship: " << board[j][i].hasShip;
            if (board[j][i].hit == 'H'){
             cout << "\t" << board[j][i].hit;
           } else if (board[j][i].hit == 'M'){
             cout <<"\t" << board[j][i].hit;
-          } else if (board[j][i].hasShip && board[j][i].hasMine == true){
-            cout << "  " << board[j][i].hasShip << "/Ø";
-          } else if (board[j][i].hasShip){
-            cout <<"\t" << board[j][i].hasShip;
+          } else if (board[j][i].hasBoat && board[j][i].hasMine == true){
+            cout << "  " << board[j][i].hasBoat << "/Ø";
+          } else if (board[j][i].hasBoat){
+            cout <<"\t" << board[j][i].hasBoat;
           } else if (board[j][i].hasMine == true){
             cout << "\t" << "Ø" << setw(2);
           } else if(!board[j][i].hit){
@@ -99,7 +73,7 @@ class boardClass {
       }
     }
 
-    void setShipsMenu(){
+    void setBoatsMenu(){
       string input = "-1"; //declare and initialise an integer type variable
 	    do { //set up a continuous loop
         cout << "\nPlease choose from the following options\n1. Set boats manually\n2. Automatically set boats \n0. Quit\n\nOption: ";
@@ -116,7 +90,7 @@ class boardClass {
                 cout << "\n\nPlease choose where you want the front of boat ("<< i + 1 <<") to go (eg. A5) or enter:\n1. To auto-place the rest of the boats\n2. To stop placing boats\n0. To quit\n\nInput:";
                 getline(cin, input);
                 if (input == "1"){
-                  autoSetShips(i);
+                  autoSetBoats(i);
                   outputBoard();
                   break;
                 } else if (input == "2"){
@@ -128,7 +102,7 @@ class boardClass {
                 } else if (validateInput(input)){
                   cout << "Please choose which direction you want the rest of the boat to go (L)eft (R)ight (U)p (D)own:\n";
                   getline(cin, input);
-                  if(!setShip(input, boatList[i])){
+                  if(!setBoat(input, boatList[i])){
                     cout << "\nYou cant place a boat here, please try again!\n\n";
                     i--;
                   }
@@ -141,7 +115,7 @@ class boardClass {
               break;
             case 2: 
               //maybe change this to a variable so its easier to understand
-              autoSetShips(0);
+              autoSetBoats(0);
               outputBoard();
               input = yOrN();
               break;
@@ -205,12 +179,26 @@ class boardClass {
       }
     }
 
-    int convertArrayToInt(int input){
-      int convertToInt = 48;
-      string inputToString = to_string(input);
-      int inputInt = stoi(inputToString);
-      int convertFromAsciiToInt = inputInt -= convertToInt;
-      return convertFromAsciiToInt;
+    void autoSetBoats(int i = 0){
+      int amountOfTimesTried = 0;
+      for (int j = i; j < boatList.size(); j++){
+        randomCoordinates();
+        int movementOnXorY = rand() % 2;
+        int randomNumber = rand() % 4;
+        // cout << amountOfTimesTried;
+        if(!validateBoatPlacement(boatList[j], movementOnXorY, -1) && amountOfTimesTried <= 100){
+          resetCoord();
+          j--;
+          amountOfTimesTried++;
+          // cout << amountOfTimesTried << ", ";
+        } else if(amountOfTimesTried > 100) {
+          cout << "\nAmount of boats that can be placed has been met, please continue with set-up\n";
+          break;
+        } else {
+          amountOfTimesTried = 0;
+          resetCoord();
+        }
+      }
     }
 
     bool validateCoord(int* coord){
@@ -224,109 +212,16 @@ class boardClass {
       coordinates[0] = 0;
       coordinates[1] = 0;
     }
-    void inputShipIntoCoordinate(boat currentBoat){
+    void inputBoatIntoCoordinate(boat currentBoat){
       char characterForBoard = currentBoat.name[0];
-      board[coordinates[0]][coordinates[1]].hasShip = characterForBoard;
-    }
-    int setShip(string direction, boat currentBoat){
-      bool successfulBoatPlacement;
-      if (direction == "L" || direction == "l"){
-        successfulBoatPlacement = validateBoatPlacement(currentBoat, 0, -1);
-
-      } else if (direction == "R" || direction == "r"){
-        successfulBoatPlacement = validateBoatPlacement(currentBoat, 0, 1);
-
-      } else if (direction == "U" || direction == "u"){
-        successfulBoatPlacement = validateBoatPlacement(currentBoat, 1, -1);
-
-      } else if (direction == "D" || direction == "d"){
-        successfulBoatPlacement = validateBoatPlacement(currentBoat, 1, 1);
-
-      } else {
-        cout << "The character you entered was incorrect, try again";
-        return 1;
-      }
-      if(successfulBoatPlacement == true){
-        resetCoord();
-        return true;
-      } else {
-        resetCoord();
-        return false;
-      }
+      board[coordinates[0]][coordinates[1]].hasBoat = characterForBoard;
     }
 
-    bool validateBoatPlacement(boat currentBoat, int movementOnXorY, int plusOrMinus1){
-      int localBoatCoordinates[2] = { coordinates[0], coordinates[1] };
-      for(int i = 0; i <= currentBoat.size - 1 ; i++){
-        if(!validateCoord(localBoatCoordinates)){
-          return false;
-        } else if(tileHasShip(localBoatCoordinates) == true){
-          return false;
-        } else {
-          localBoatCoordinates[movementOnXorY] += plusOrMinus1;
-        }
-      }
-      for(int i = 0; i <= currentBoat.size - 1 ; i++){
-        inputShipIntoCoordinate(currentBoat);
-        coordinates[movementOnXorY] += plusOrMinus1;
-        tilesToHit++;
-      }
-      return true;
-    } 
-    bool tileHasShip(int* localBoatCoordinates){
-      if(!board[localBoatCoordinates[0]][localBoatCoordinates[1]].hasShip){
-        return false;
-      } else {
-        return true;
-      }
-    }
-    void autoSetShips(int i = 0){
-      int amountOfTimesTried = 0;
-      for (int j = i; j < boatList.size(); j++){
-        randomCoordinates();
-        int movementOnXorY = rand() % 2;
-        int randomNumber = rand() % 4;
-        // cout << amountOfTimesTried;
-        if(!validateBoatPlacement(boatList[j], movementOnXorY, -1) && amountOfTimesTried <= 100){
-          resetCoord();
-          j--;
-          amountOfTimesTried++;
-          // cout << amountOfTimesTried << ", ";
-        } else if(amountOfTimesTried > 100) {
-          cout << "\nAmount of ships that can be placed has been met, please continue with set-up\n";
-          break;
-        } else {
-          amountOfTimesTried = 0;
-          resetCoord();
-        }
-      }
-    }
-    string yOrN(){
-      string inputTryAgain; 
-      cout << "\nAre you happy with this placement? Please type Y/N: ";
-      getline(cin, inputTryAgain);
-      //asking for Y/N input
-      if(inputTryAgain == "Y" || inputTryAgain == "y"){
-        return "0";
-        //If yes then exit and go 
-      } else if (inputTryAgain == "N" || inputTryAgain == "n"){
-        cout << "Ok, please retry placing boats\n";
-        emptyBoard();
-        return "-1";
-        //Isnt exiting the function 
-        //exit
-      } else {
-        cout << "invalid input, try again \n";
-        yOrN();
-        return "-1";
-        //fall back if they enter something else
-      }
-    }
     int* getCoordinates(){
       return coordinates;
     }
     bool setHit(){
-      if(board[coordinates[0]][coordinates[1]].hasShip && board[coordinates[0]][coordinates[1]].hasMine){
+      if(board[coordinates[0]][coordinates[1]].hasBoat && board[coordinates[0]][coordinates[1]].hasMine){
         board[coordinates[0]][coordinates[1]].hit = 'H';
         tilesToHit--;
         mineExplosion();
@@ -337,7 +232,7 @@ class boardClass {
         mineExplosion();
         resetCoord();
         return true;
-      } else if(board[coordinates[0]][coordinates[1]].hasShip){
+      } else if(board[coordinates[0]][coordinates[1]].hasBoat){
         board[coordinates[0]][coordinates[1]].hit = 'H';
         tilesToHit--;
         resetCoord();
@@ -369,8 +264,8 @@ class boardClass {
       int c = 0, b = 0, d = 0, s = 0, p = 0, numOfBoatsNotSunk = 0;
       for (int i = 0; i < board.size(); i++){
         for (int j = 0; j < board[i].size(); j++){
-           if (board[i][j].hit == false && board[i][j].hasShip){
-            switch(board[i][j].hasShip) {
+           if (board[i][j].hit == false && board[i][j].hasBoat){
+            switch(board[i][j].hasBoat) {
               case 'C': c++; break; 
               case 'B': b++; break;
               case 'D': d++; break;
@@ -415,7 +310,83 @@ class boardClass {
 
 
     
-    private: 
+  private: 
+    void getConfigBoard() {
+			ifstream config;
+      config.open("adaship_config.ini");
+        if (config.is_open()){
+        string line;
+        while( getline(config,line)){
+          stringstream configStrStream(line);
+          string lineType;
+          getline(configStrStream, lineType, ':');
+          lineType = convertToUpper(lineType);
+          if(lineType == "BOARD"){
+            int x = getIntFromFile(configStrStream, 'x');
+            int y = getIntFromFile(configStrStream, 'x');
+            if(x <= 80 && y <= 80 && x >= 5 && x >= 5){
+              boardCoordinates[0] = x;
+              boardCoordinates[1] = y;
+            } else {
+              cout << "\nBoard needs to be between 5 and 80 height and width\nPlease reconfigure the 'adaship_config.ini' file\nExiting\n";
+              exit(0);
+            }
+          }
+        }
+      }
+			config.close();
+		}
+    bool validateBoatPlacement(boat currentBoat, int movementOnXorY, int plusOrMinus1){
+      int localBoatCoordinates[2] = { coordinates[0], coordinates[1] };
+      for(int i = 0; i <= currentBoat.size - 1 ; i++){
+        if(!validateCoord(localBoatCoordinates)){
+          return false;
+        } else if(tileHasBoat(localBoatCoordinates) == true){
+          return false;
+        } else {
+          localBoatCoordinates[movementOnXorY] += plusOrMinus1;
+        }
+      }
+      for(int i = 0; i <= currentBoat.size - 1 ; i++){
+        inputBoatIntoCoordinate(currentBoat);
+        coordinates[movementOnXorY] += plusOrMinus1;
+        tilesToHit++;
+      }
+      return true;
+    } 
+    bool tileHasBoat(int* localBoatCoordinates){
+      if(!board[localBoatCoordinates[0]][localBoatCoordinates[1]].hasBoat){
+        return false;
+      } else {
+        return true;
+      }
+    }
+    int setBoat(string direction, boat currentBoat){
+      bool successfulBoatPlacement;
+      if (direction == "L" || direction == "l"){
+        successfulBoatPlacement = validateBoatPlacement(currentBoat, 0, -1);
+
+      } else if (direction == "R" || direction == "r"){
+        successfulBoatPlacement = validateBoatPlacement(currentBoat, 0, 1);
+
+      } else if (direction == "U" || direction == "u"){
+        successfulBoatPlacement = validateBoatPlacement(currentBoat, 1, -1);
+
+      } else if (direction == "D" || direction == "d"){
+        successfulBoatPlacement = validateBoatPlacement(currentBoat, 1, 1);
+
+      } else {
+        cout << "The character you entered was incorrect, try again";
+        return 1;
+      }
+      if(successfulBoatPlacement == true){
+        resetCoord();
+        return true;
+      } else {
+        resetCoord();
+        return false;
+      }
+    }
     void emptyBoard(){
       for(int xAxis = 0; xAxis <= boardCoordinates[0] - 1; xAxis++){
         for(int yAxis = 0; yAxis <= boardCoordinates[1] - 1; yAxis++){
@@ -423,6 +394,28 @@ class boardClass {
         }
       }
     }
+    string yOrN(){
+      string inputTryAgain; 
+      cout << "\nAre you happy with this placement? Please type Y/N: ";
+      getline(cin, inputTryAgain);
+      //asking for Y/N input
+      if(inputTryAgain == "Y" || inputTryAgain == "y"){
+        return "0";
+        //If yes then exit and go 
+      } else if (inputTryAgain == "N" || inputTryAgain == "n"){
+        cout << "Ok, please retry placing boats\n";
+        emptyBoard();
+        return "-1";
+        //Isnt exiting the function 
+        //exit
+      } else {
+        cout << "invalid input, try again \n";
+        yOrN();
+        return "-1";
+        //fall back if they enter something else
+      }
+    }
+
     void mineExplosion(){
       int localCoord[] = { coordinates[0], coordinates[1] }; 
       updateCoordToNewCoord(localCoord, -1, -1);

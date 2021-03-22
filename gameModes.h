@@ -5,11 +5,11 @@
 void oneVsComp(){
   bool endGame = false;
   boardClass playersBoard;
-  playersBoard.setShipsMenu();
+  playersBoard.setBoatsMenu();
 
   boardClass computerBoard;
   computerTargeting computerPlayer;
-  computerBoard.autoSetShips();
+  computerBoard.autoSetBoats();
   bool notSalvoMode = false;
 
   system("clear");
@@ -38,11 +38,11 @@ void twoPlayerGame(){
   system("clear");
   cout << "\t\t\tPlayer one set up!";
   boardClass playerOneBoard;
-  playerOneBoard.setShipsMenu();
+  playerOneBoard.setBoatsMenu();
   system("clear");
   cout << "\t\t\tPlayer two set up!";
   boardClass playerTwoBoard;
-  playerTwoBoard.setShipsMenu();
+  playerTwoBoard.setBoatsMenu();
   //set up two boards for two player
 
   cout << "\t\t\tLet the game commence!\n";
@@ -72,11 +72,11 @@ void oneVsCompSalvo(){
   string input;
   bool salvoMode = true;
   boardClass playersBoard;
-  playersBoard.setShipsMenu();
+  playersBoard.setBoatsMenu();
 
   boardClass computerBoard;
   computerTargeting computerPlayer;
-  computerBoard.autoSetShips();
+  computerBoard.autoSetBoats();
   bool endGame = false;
   system("clear");
   //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
@@ -124,11 +124,11 @@ void twoPlayerGameSalvo(){
   system("clear");
   cout << "\t\t\tPlayer one set up!";
   boardClass playerOneBoard;
-  playerOneBoard.setShipsMenu();
+  playerOneBoard.setBoatsMenu();
   system("clear");
   cout << "\t\t\tPlayer two set up!";
   boardClass playerTwoBoard;
-  playerTwoBoard.setShipsMenu();
+  playerTwoBoard.setBoatsMenu();
   system("clear");
   //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
   cout << "\t\t\tLet the game commence!\n";
@@ -178,7 +178,7 @@ void oneVsCompMines(){
 
   //set up for the player
   boardClass playersBoard;
-  playersBoard.setShipsMenu();
+  playersBoard.setBoatsMenu();
   playersBoard.setMines();
   playersBoard.outputBoard();
   cout << "\nYour mines have been placed, enter any key to continue: ";
@@ -187,7 +187,7 @@ void oneVsCompMines(){
   //set up for the computer player 
   boardClass computerBoard;
   computerTargeting computerPlayer;
-  computerBoard.autoSetShips();
+  computerBoard.autoSetBoats();
   computerBoard.setMines();
 
   system("clear");
@@ -219,7 +219,7 @@ void twoPlayerGameMines(){
   cout << "\t\t\tPlayer one set up!";
   system("clear");
   boardClass playerOneBoard;
-  playerOneBoard.setShipsMenu();
+  playerOneBoard.setBoatsMenu();
   playerOneBoard.setMines();
   playerOneBoard.outputBoard();
   cout << "\nYour mines have been placed, enter any key to continue: ";
@@ -230,7 +230,7 @@ void twoPlayerGameMines(){
   system("clear");
   cout << "\t\t\tPlayer two set up!";
   boardClass playerTwoBoard;
-  playerTwoBoard.setShipsMenu();
+  playerTwoBoard.setBoatsMenu();
   playerTwoBoard.setMines();
   playerTwoBoard.outputBoard();
   cout << "\nYour mines have been placed, enter any key to continue: ";
