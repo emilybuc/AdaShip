@@ -2,6 +2,7 @@
 #include <fstream>//This allows my file to access a filestream
 #include <sstream>
 #include <string>
+#include <vector>
 using namespace std;
 
 int getIntFromFile(stringstream& lineStream, char delimiter);
@@ -65,12 +66,7 @@ bool isNo(string input){
   for (int i = input.length() - 1; i >= 0; i--){
     //looping through the string to find if its a digit, if it isnt then return false
     if(!isdigit(input[i])){
-      // if(input[i] == '-' && i == 0){
-      //   return true;
-      //   //Checking if the first digit is a - (for a minus number)
-      // }
       return false;
-      //if it isnt a digit then return 
     } 
   }
   return true;
@@ -79,14 +75,16 @@ bool isNo(string input){
 int getIntFromFile(stringstream& lineStream, char delimiter){
   string value;
   getline(lineStream, value, delimiter);
+  //the value from before the delimiter
   int convertedToInt = stoi(value);
+  //convert it to an int
   return convertedToInt;
 }
 
 string convertToUpper(string word){
   for (int i=0; i < word.length() ; i++ ){ 
       word[i] = toupper(word[i]);
-      //iterating through each character to convert it to lowercase
+      //iterating through each character to convert it to uppercase
   }
   return word;
 }

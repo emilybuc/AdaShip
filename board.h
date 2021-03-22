@@ -6,7 +6,13 @@
 
 class boardClass {
   private:
-    //set up my private variables
+    //set up my private variables/objects
+    struct tile {
+      char hit;
+      char hasBoat;
+      bool hasMine;
+    }; //an object for the tiles within the board
+    
     vector<vector<tile>> board;
     //this is the 2d vector that will hold tiles
     int boardCoordinates[2];

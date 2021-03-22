@@ -6,11 +6,12 @@ void oneVsComp(){
   bool endGame = false;
   boardClass playersBoard;
   playersBoard.setBoatsMenu();
+  //set up the players board
 
   boardClass computerBoard;
   computerTargeting computerPlayer;
   computerBoard.autoSetBoats();
-  bool notSalvoMode = false;
+  //set up the computers board aswell as the class for the computer player
 
   system("clear");
   //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
@@ -20,30 +21,37 @@ void oneVsComp(){
     playersBoard.outputBoard();
     cout << "\nTarget Board\n";
     computerBoard.outputBoard();
-    endGame = playerShootMissile(computerBoard, notSalvoMode);
+    //output both boards so the user can see where they want to hit
+
+    endGame = playerShootMissile(computerBoard);
+    //if they shoot and they press Q then set end game to true
     endGame = isEndGame(playersBoard, computerBoard);
+    //check the state
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on
 
     cout << "\nComputers Turn\n";
-    computerPlayer.shootMissile(playersBoard, notSalvoMode);
+    computerPlayer.shootMissile(playersBoard);
+    //shoot a missile on the players board
     endGame = isEndGame(playersBoard, computerBoard);
   	} while(endGame != true);
+    //while endgame doesnt = true then carry on looping
     cout << "\nThe game has ended, I hope you had fun\n";
 }
 
 void twoPlayerGame(){
-  bool notSalvoMode = false;
   bool endGame = false;
+
   system("clear");
   cout << "\t\t\tPlayer one set up!";
   boardClass playerOneBoard;
   playerOneBoard.setBoatsMenu();
   system("clear");
+
   cout << "\t\t\tPlayer two set up!";
   boardClass playerTwoBoard;
   playerTwoBoard.setBoatsMenu();
-  //set up two boards for two player
+  //set up two boards for two players
 
   cout << "\t\t\tLet the game commence!\n";
 	do { //set up a continuous loop
@@ -52,16 +60,18 @@ void twoPlayerGame(){
     playerOneBoard.outputBoard();
     cout << "\nTarget Board\n";
     playerTwoBoard.outputBoard();
-    endGame = playerShootMissile(playerTwoBoard, notSalvoMode);
+    endGame = playerShootMissile(playerTwoBoard);
     endGame = isEndGame(playerOneBoard, playerTwoBoard);
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on
     system("clear");
+    //clear the previous screen so the second player can play
     cout << "Player Two's Turn\n\nYour Board\n";
     playerTwoBoard.outputBoard();
     cout << "\nTarget Board\n";
     playerOneBoard.outputBoard();
-    endGame = playerShootMissile(playerOneBoard, notSalvoMode);
+    endGame = playerShootMissile(playerOneBoard);
+    //allow the second player to shoot a missile
     endGame = isEndGame(playerTwoBoard, playerOneBoard);
     system("clear");
   	} while(endGame != true);
@@ -79,7 +89,7 @@ void oneVsCompSalvo(){
   computerBoard.autoSetBoats();
   bool endGame = false;
   system("clear");
-  //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
+
   cout << "\t\t\tLet the game commence!\n";
 	do { //set up a continuous loop
     cout << "\nYour Turn\n";
@@ -90,7 +100,9 @@ void oneVsCompSalvo(){
       cout << "\nTarget Board\n";
       computerBoard.outputBoard();
       cout << "You have (" << amountOfMissiles << ") Missile(s)";
+      //output the number of missiles the player has
       endGame = playerShootMissile(computerBoard, true);
+      //this will loop for as long as the player has missiles
       endGame = isEndGame(playersBoard, computerBoard);
       if(endGame)break;
       amountOfMissiles--;
@@ -101,12 +113,15 @@ void oneVsCompSalvo(){
 
     cout << "\n\bComputers Turn\n";
     int amountOfComputersMissiles = computerBoard.salvoMode();
+    //this function returns the amount of ships that havent been sunk
     cout << "\nThe computer has (" << amountOfComputersMissiles << ") Missile(s)\n";
+    //this outputs the amount of missiles the computer has
     while(amountOfComputersMissiles != 0){
       computerPlayer.shootMissile(playersBoard, salvoMode);
       endGame = isEndGame(playersBoard, computerBoard);
       if(endGame)break;
       amountOfComputersMissiles--;
+      //minus amount of missiles
     }
     cout << "\nYour Updated Board\n";
     playersBoard.outputBoard();
@@ -145,6 +160,7 @@ void twoPlayerGameSalvo(){
       endGame = isEndGame(playerOneBoard, playerTwoBoard);
       if(endGame)break;
       amountOfMissilesPlayerOne--;
+
     }
     cout << "Enter any key to finish your turn: ";
     getline(cin, input);
@@ -173,7 +189,6 @@ void twoPlayerGameSalvo(){
 
 void oneVsCompMines(){
   bool endGame = false;
-  bool notSalvoMode = false;
   string input;
 
   //set up for the player
@@ -182,6 +197,7 @@ void oneVsCompMines(){
   cout << "\nCurrently placing mines...\nPlease note that mines are indicated with a Ø\n\n";
   //I used a different symbol for the mines than just the M character because of the overlap with the symbol used for miss. 
   playersBoard.setMines();
+  //set mines for the players board
   playersBoard.outputBoard();
   cout << "\nYour mines have been placed, enter any key to continue: ";
   getline(cin, input);
@@ -200,13 +216,13 @@ void oneVsCompMines(){
     playersBoard.outputBoard();
     cout << "\nTarget Board\n";
     computerBoard.outputBoard();
-    endGame = playerShootMissile(computerBoard, notSalvoMode);
+    endGame = playerShootMissile(computerBoard);
     endGame = isEndGame(playersBoard, computerBoard);
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on
 
     cout << "\nComputers Turn\n";
-    computerPlayer.shootMissile(playersBoard, notSalvoMode);
+    computerPlayer.shootMissile(playersBoard);
     endGame = isEndGame(playersBoard, computerBoard);
   	} while(endGame != true);
     cout << "\nThe game has ended, I hope you had fun\n";
@@ -214,7 +230,6 @@ void oneVsCompMines(){
 
 void twoPlayerGameMines(){
   bool endGame = false;
-  bool notSalvoMode = false;
   string input;
 
   //set up for the first player
@@ -249,7 +264,7 @@ void twoPlayerGameMines(){
     playerOneBoard.outputBoard();
     cout << "\nTarget Board\n";
     playerTwoBoard.outputBoard();
-    endGame = playerShootMissile(playerTwoBoard, notSalvoMode);
+    endGame = playerShootMissile(playerTwoBoard);
     endGame = isEndGame(playerOneBoard, playerTwoBoard);
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on
@@ -258,7 +273,7 @@ void twoPlayerGameMines(){
     playerTwoBoard.outputBoard();
     cout << "\nTarget Board\n";
     playerOneBoard.outputBoard();
-    endGame = playerShootMissile(playerOneBoard, notSalvoMode);
+    endGame = playerShootMissile(playerOneBoard);
     endGame = isEndGame(playerTwoBoard, playerOneBoard);
     if(endGame)break;
     system("clear");
@@ -269,7 +284,7 @@ void twoPlayerGameMines(){
 
 void compVsCompMines(){
   bool endGame = false;
-  bool notSalvoMode = false;
+  bool salvoMode = false;
   string input;
 
   //set up for the player
@@ -286,12 +301,13 @@ void compVsCompMines(){
   cout << "\t\t\tLet the game commence!\n";
 	do { //set up a continuous loop
     cout << "\nComputer One's Turn\n";
-    compPlayerOne.shootMissile(compTwoBoard, notSalvoMode, "Computer Player Two's Board");
+    compPlayerOne.shootMissile(compTwoBoard, salvoMode, "Computer Player Two's Board");
+    //passing in the second variable because I need to pass in the 3rd variable of what i want to be outputted above the board
     endGame = isEndGame(compOneBoard, compTwoBoard);
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on
     cout << "\nComputer Two's Turn\n";
-    compPlayerTwo.shootMissile(compOneBoard, notSalvoMode, "Computer Player One's Board");
+    compPlayerTwo.shootMissile(compOneBoard, salvoMode, "Computer Player One's Board");
     endGame = isEndGame(compTwoBoard, compOneBoard);
   	} while(endGame != true);
     cout << "\nThe game has ended, I hope you had fun\n";
