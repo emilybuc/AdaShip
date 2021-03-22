@@ -87,7 +87,7 @@ class boardClass {
                 outputBoard();
                 string input;
                 gameBoatsClass.listBoats();
-                cout << "\n\nPlease choose where you want the front of boat ("<< i + 1 <<") to go (eg. A5) or enter:\n1. To auto-place the rest of the boats\n2. To stop placing boats\n0. To quit\n\nInput:";
+                cout << "\n\nPlease choose where you want the front of boat ("<< i + 1 <<") to go (eg. A5) or enter:\n1. To auto-place the rest of the boats\n2. To stop placing boats\n0. To quit\n\nInput: ";
                 getline(cin, input);
                 if (input == "1"){
                   autoSetBoats(i);
@@ -100,8 +100,9 @@ class boardClass {
                   //this doesnt work
                   break;
                 } else if (validateInput(input)){
-                  cout << "Please choose which direction you want the rest of the boat to go (L)eft (R)ight (U)p (D)own:\n";
+                  cout << "\nPlease choose which direction you want the rest of the boat to go:\nL. Left\nR. Right\nU. Up\nD. Down\n\nInput: ";
                   getline(cin, input);
+                  cout << endl;
                   if(!setBoat(input, boatList[i])){
                     cout << "\nYou cant place a boat here, please try again!\n\n";
                     i--;
@@ -111,6 +112,7 @@ class boardClass {
                   i--;
                 }
               }
+              outputBoard();
               input = yOrN();
               break;
             case 2: 
@@ -201,25 +203,10 @@ class boardClass {
       }
     }
 
-    bool validateCoord(int* coord){
-      if(coord[0] < boardCoordinates[0] && coord[1] < boardCoordinates[1] && coord[0] >= 0 && coord[1] >= 0){
-        return true;
-      }
-      return false;
-    }
-    
-    void resetCoord(){
-      coordinates[0] = 0;
-      coordinates[1] = 0;
-    }
-    void inputBoatIntoCoordinate(boat currentBoat){
-      char characterForBoard = currentBoat.name[0];
-      board[coordinates[0]][coordinates[1]].hasBoat = characterForBoard;
-    }
-
     int* getCoordinates(){
       return coordinates;
     }
+
     bool setHit(){
       if(board[coordinates[0]][coordinates[1]].hasBoat && board[coordinates[0]][coordinates[1]].hasMine){
         board[coordinates[0]][coordinates[1]].hit = 'H';
@@ -275,7 +262,7 @@ class boardClass {
           } 
         }
       }
-      int boatsNotSunk[] = {c,b,d,s,p}; 
+      int boatsNotSunk[] = { c, b, d, s, p }; 
       for (int i = 0; i < 5; i++){ 
         if(boatsNotSunk[i] != 0){
           numOfBoatsNotSunk++;
@@ -307,8 +294,6 @@ class boardClass {
       }
     }
 
-
-
     
   private: 
     void getConfigBoard() {
@@ -336,6 +321,23 @@ class boardClass {
       }
 			config.close();
 		}
+    bool validateCoord(int* coord){
+      if(coord[0] < boardCoordinates[0] && coord[1] < boardCoordinates[1] && coord[0] >= 0 && coord[1] >= 0){
+        return true;
+      }
+      return false;
+    }
+
+    void resetCoord(){
+      coordinates[0] = 0;
+      coordinates[1] = 0;
+    }
+
+    void inputBoatIntoCoordinate(boat currentBoat){
+      char characterForBoard = currentBoat.name[0];
+      board[coordinates[0]][coordinates[1]].hasBoat = characterForBoard;
+    }
+
     bool validateBoatPlacement(boat currentBoat, int movementOnXorY, int plusOrMinus1){
       int localBoatCoordinates[2] = { coordinates[0], coordinates[1] };
       for(int i = 0; i <= currentBoat.size - 1 ; i++){

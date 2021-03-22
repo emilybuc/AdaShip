@@ -32,11 +32,11 @@ bool playerShootMissile(boardClass &board, bool salvoMode){
   return false;
 }
 
-bool isEndGame(boardClass &playersBoard, boardClass &computerBoard){
+bool isEndGame(boardClass &playersBoard, boardClass &otherPlayersBoard){
   if(playersBoard.hasGameEnded()){
     cout << "You lost against a computer, what are you doing?\n";
     return true;
-  } else if(computerBoard.hasGameEnded()){
+  } else if(otherPlayersBoard.hasGameEnded()){
     cout << "You won!";
     return true;
   }
