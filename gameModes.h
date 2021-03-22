@@ -179,6 +179,8 @@ void oneVsCompMines(){
   //set up for the player
   boardClass playersBoard;
   playersBoard.setBoatsMenu();
+  cout << "\nCurrently placing mines...\nPlease note that mines are indicated with a Ø\n\n";
+  //I used a different symbol for the mines than just the M character because of the overlap with the symbol used for miss. 
   playersBoard.setMines();
   playersBoard.outputBoard();
   cout << "\nYour mines have been placed, enter any key to continue: ";
@@ -220,6 +222,8 @@ void twoPlayerGameMines(){
   system("clear");
   boardClass playerOneBoard;
   playerOneBoard.setBoatsMenu();
+  cout << "\nCurrently placing mines...\nPlease note that mines are indicated with a Ø\n\n";
+  //I used a different symbol for the mines than just the M character because of the overlap with the symbol used for miss.
   playerOneBoard.setMines();
   playerOneBoard.outputBoard();
   cout << "\nYour mines have been placed, enter any key to continue: ";
@@ -258,6 +262,37 @@ void twoPlayerGameMines(){
     endGame = isEndGame(playerTwoBoard, playerOneBoard);
     if(endGame)break;
     system("clear");
+  	} while(endGame != true);
+    cout << "\nThe game has ended, I hope you had fun\n";
+}
+
+
+void compVsCompMines(){
+  bool endGame = false;
+  bool notSalvoMode = false;
+  string input;
+
+  //set up for the player
+  boardClass compOneBoard;
+  computerTargeting compPlayerOne;
+  compOneBoard.autoSetBoats();
+  compOneBoard.setMines();
+  //set up for the computer player 
+  boardClass compTwoBoard;
+  computerTargeting compPlayerTwo;
+  compTwoBoard.autoSetBoats();
+  compTwoBoard.setMines();
+
+  cout << "\t\t\tLet the game commence!\n";
+	do { //set up a continuous loop
+    cout << "\nComputer One's Turn\n";
+    compPlayerOne.shootMissile(compTwoBoard, notSalvoMode, "Computer Player Two's Board");
+    endGame = isEndGame(compOneBoard, compTwoBoard);
+    if(endGame)break;
+    //exit out of function if the game has been exited or won by the player before moving on
+    cout << "\nComputer Two's Turn\n";
+    compPlayerTwo.shootMissile(compOneBoard, notSalvoMode, "Computer Player One's Board");
+    endGame = isEndGame(compTwoBoard, compOneBoard);
   	} while(endGame != true);
     cout << "\nThe game has ended, I hope you had fun\n";
 }

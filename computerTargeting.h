@@ -18,7 +18,7 @@ class computerTargeting {
     setCoordOfHit({ 0, 0, false });
     //Initalise one value so the if statement doesnt error
   }
-  void shootMissile(boardClass &board, bool salvoMode){
+  void shootMissile(boardClass &board, bool salvoMode, string boardTitle = "Your Updated Board"){
     int coordOfHitIndex = coordOfHit.size() - 1;
     while (0 <= coordOfHitIndex){
       if(coordOfHit[coordOfHitIndex].hit){
@@ -36,15 +36,15 @@ class computerTargeting {
     localCoords[1] = board.getCoordinates()[1];
     if(board.setHit()){
       setCoordOfHit({ localCoords[0], localCoords[1], true });
-      cout << "\nComputers missile hit!\n";
+      cout << "\nMissile hit!\n";
       } else {
       setCoordOfHit({ localCoords[0], localCoords[1], false });
-      cout << "\nComputers missile missed!\n";
+      cout << "\nMissile missed!\n";
     }
 
     string endTurn;
     if(!salvoMode){
-      cout << "\nYour Updated Board\n";
+      cout << "\n" << boardTitle << "\n";
       board.outputBoard();
       cout << "\nEnter any key to finish the computers turn: ";
       getline(cin, endTurn);

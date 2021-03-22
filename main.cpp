@@ -31,6 +31,7 @@ void menu(void) {
     cout << "\t4. Two player game (salvo)\n";
     cout << "\t5. One player v computer (hidden mines) game\n";
     cout << "\t6. Two player (hidden mines) game\n";
+    cout << "\t7. Computer v computer (hidden mines) game\n";
 
 		cout << "\n\t0. Quit\n";
 
@@ -46,6 +47,7 @@ void menu(void) {
         case 4: twoPlayerGameSalvo(); break;
         case 5: oneVsCompMines(); break;
         case 6: twoPlayerGameMines(); break;
+        case 7: compVsCompMines(); break;
         
         case 0: cout << "Exiting"; break;
         default:
