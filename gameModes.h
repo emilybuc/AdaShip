@@ -109,7 +109,7 @@ void oneVsCompSalvo(){
       amountOfComputersMissiles--;
     }
     cout << "\nYour Updated Board\n";
-    computerBoard.outputBoard();
+    playersBoard.outputBoard();
     cout << "\nEnter any key to finish the computers turn: ";
     getline(cin, input);
   	} while(endGame != true);

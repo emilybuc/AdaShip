@@ -7,22 +7,27 @@ class computerTargeting {
       int y;
       bool hit;
     };
-    vector <coordinates> coordOfhit;
-    int timesHit;
+    vector <coordinates> coordOfHit;
 
     void setCoordOfHit(coordinates coordinateToAdd){
-      coordOfhit.push_back({ coordinateToAdd });
+      coordOfHit.push_back({ coordinateToAdd });
     }
 
   public: 
   computerTargeting(){
     setCoordOfHit({ 0, 0, false });
     //Initalise one value so the if statement doesnt error
-    timesHit = 0;
   }
   void shootMissile(boardClass &board, bool salvoMode){
-    if(coordOfhit[coordOfhit.size() - 1].hit){
-      seekTarget(board);
+    int coordOfHitIndex = coordOfHit.size() - 1;
+    while (0 <= coordOfHitIndex){
+      if(coordOfHit[coordOfHitIndex].hit){
+        break;
+      }
+      coordOfHitIndex--;
+    }
+    if(coordOfHit[coordOfHitIndex].hit){
+      seekTarget(board, coordOfHitIndex);
     } else {
       board.randomCoordinates();
     }
@@ -45,25 +50,22 @@ class computerTargeting {
       getline(cin, endTurn);
     }
   }
-  void seekTarget(boardClass &board){
-    int coordOfhitSize = coordOfhit.size() - 1;
-    int randomDirection = rand() % 4;
-
+  void seekTarget(boardClass &board, int coordOfHitIndex){
     int directions[4][2] = { {-1, 0}, {0, -1}, {0, 1}, {1, 0} };
-    int xMovement = directions[randomDirection][0]; 
-    int yMovement = directions[randomDirection][1]; 
+    for(int i = 0; i <= 3; i++){
+      int xMovement = directions[i][0]; 
+      int yMovement = directions[i][1]; 
 
-    int x = coordOfhit[coordOfhitSize].x + xMovement;
-    int y = coordOfhit[coordOfhitSize].y + yMovement;
+      int x = coordOfHit[coordOfHitIndex].x + xMovement;
+      int y = coordOfHit[coordOfHitIndex].y + yMovement;
 
-    if(board.setCoordinates(x, y)){
-      return;
-    } else if (timesHit == 4) {
-      board.randomCoordinates();
-      //All squares around the hit tile have already been hit try a random coordinate
-    } else {
-      timesHit++;
-      seekTarget(board);
+      if(board.setCoordinates(x, y)){
+        break;
+      } else if (i == 3){
+        board.randomCoordinates();
+        //All squares around the hit tile have already been hit try a random coordinate
+        break;
+      }
     }
   }
 };

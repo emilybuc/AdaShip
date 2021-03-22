@@ -111,41 +111,30 @@ class boardClass {
             case 1: 
               for (int i = 0; i < boatList.size(); i++){
                 outputBoard();
-                string choice, option;
-                cout << "\nPlease choose an option: \n(M) Manually place next boat\n(A) Auto-place the rest of the boats\n(S) Stop placing ships\n(Q) Quit\nOption:";
-                getline(cin, option);
-                //instead of doing 2 menus maybe do one and validate if they've inputted A or Q if they want to quit instead of 2 menus 
-                if(option == "M" || option == "m"){
-                  cout << endl << "Please choose where you want the front of boat ("<< i + 1 <<") to go (eg. A5)" << "\n";
-                  gameBoatsClass.listBoats();
-                  cout << "\n\n";
-                  getline(cin, choice);
-                  bool validInput = validateInput(choice);
-                  if(validInput == true){
-                    cout << "Please choose which direction you want the rest of the boat to go (L)eft (R)ight (U)p (D)own:\n";
-                    getline(cin, choice);
-                    if(!setShip(choice, boatList[i])){
-                      cout << "\nYou cant place a boat here, please try again!\n\n";
-                      i--;
-                    }
-                  } else {
-                    //sort out some validation for input
-                    cout << "That coordinate cannot be placed please try again \n";
-                    i--;
-                  }
-                } else if (option == "A" || option == "a"){
-                    autoSetShips(i);
-                    outputBoard();
-                    break;
-                } else if (option == "Q" || option == "q"){
-                  //this doesnt work
-                  input = "0";
-                } else if(option == "S" || option == "s"){
+                string input;
+                gameBoatsClass.listBoats();
+                cout << "\n\nPlease choose where you want the front of boat ("<< i + 1 <<") to go (eg. A5) or enter:\n1. To auto-place the rest of the boats\n2. To stop placing boats\n0. To quit\n\nInput:";
+                getline(cin, input);
+                if (input == "1"){
+                  autoSetShips(i);
+                  outputBoard();
+                  break;
+                } else if (input == "2"){
                   //This option can be used if the user has a large amount of boats that could potentially fit on the board as this is checked beforehand but they havent placed them in an optimised way so they can carry on with the game
                   break;
-                } else {
-                    cout << "\n'" << option << "' Is an invalid option  - please try again.\n";
+                } else if(input == "0"){
+                  //this doesnt work
+                  break;
+                } else if (validateInput(input)){
+                  cout << "Please choose which direction you want the rest of the boat to go (L)eft (R)ight (U)p (D)own:\n";
+                  getline(cin, input);
+                  if(!setShip(input, boatList[i])){
+                    cout << "\nYou cant place a boat here, please try again!\n\n";
                     i--;
+                  }
+                } else {
+                  cout << "That coordinate cannot be placed please try again \n";
+                  i--;
                 }
               }
               input = yOrN();
@@ -164,13 +153,9 @@ class boardClass {
         } 
       } while(input != "0");
     }
-
-
-
     
     bool validateInput(string input){
       int convertCharToCoord = 65;
-      int convertIntToCoord = 48;
       string xCoord, yCoord;
       for (int i = 0; i < input.size(); i++){
         if(isalpha(input[i])){
@@ -211,7 +196,6 @@ class boardClass {
       }
       coordinates[0] = xCoordInt;
       coordinates[1] = stoi(yCoord) - 1;
-      cout << "coordinates: " << coordinates[0] << ", " << coordinates[1] << endl;
 
       if(validateCoord(coordinates)){
         return true;
@@ -220,9 +204,6 @@ class boardClass {
         return false;
       }
     }
-
-
-
 
     int convertArrayToInt(int input){
       int convertToInt = 48;
@@ -246,7 +227,6 @@ class boardClass {
     void inputShipIntoCoordinate(boat currentBoat){
       char characterForBoard = currentBoat.name[0];
       board[coordinates[0]][coordinates[1]].hasShip = characterForBoard;
-
     }
     int setShip(string direction, boat currentBoat){
       bool successfulBoatPlacement;
@@ -450,23 +430,20 @@ class boardClass {
       if(validateCoord(coordinates)){
         setHit();
       }
-      // if(mineFunction){
         coordinates[0] = localCoord[0];
         coordinates[1] = localCoord[1];
         // when a mine hits another mine then it errors, that is because theres two of the same function running.
-      // } else {
-      //   resetCoord();
-      // }
     }
     bool setCoordinates(int x, int y){
       coordinates[0] = x; 
       coordinates[1] = y;
-      if(validateCoord(coordinates)){
+      if(validateCoord(coordinates) && board[coordinates[0]][coordinates[1]].hit != 'H' && board[coordinates[0]][coordinates[1]].hit != 'M'){
         return true;
       } else {
         return false;
       }
     }
+    private: 
 };
 
 //board.h
