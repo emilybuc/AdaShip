@@ -9,7 +9,7 @@ void oneVsComp(){
 
   boardClass computerBoard;
   computerTargeting computerPlayer;
-  computerBoard.computerPlayerBoard();
+  computerBoard.autoSetShips();
   bool notSalvoMode = false;
 
   system("clear");
@@ -76,7 +76,7 @@ void oneVsCompSalvo(){
 
   boardClass computerBoard;
   computerTargeting computerPlayer;
-  computerBoard.computerPlayerBoard();
+  computerBoard.autoSetShips();
   bool endGame = false;
   system("clear");
   //I saw that there were lots of security concerns about the above line that clears the console, I would not use this command in production code
@@ -187,7 +187,7 @@ void oneVsCompMines(){
   //set up for the computer player 
   boardClass computerBoard;
   computerTargeting computerPlayer;
-  computerBoard.computerPlayerBoard();
+  computerBoard.autoSetShips();
   computerBoard.setMines();
 
   system("clear");

@@ -280,7 +280,7 @@ class boardClass {
         return true;
       }
     }
-    void autoSetShips(int i){
+    void autoSetShips(int i = 0){
       int amountOfTimesTried = 0;
       for (int j = i; j < boatList.size(); j++){
         randomCoordinates();
@@ -321,17 +321,6 @@ class boardClass {
         return "-1";
         //fall back if they enter something else
       }
-    }
-    void emptyBoard(){
-      for(int xAxis = 0; xAxis <= boardCoordinates[0] - 1; xAxis++){
-        for(int yAxis = 0; yAxis <= boardCoordinates[1] - 1; yAxis++){
-          board[xAxis][yAxis] = {false, false, false};
-        }
-      }
-    }
-    void computerPlayerBoard(){
-      //maybe change this to a variable so its easier to understand
-      autoSetShips(0);
     }
     int* getCoordinates(){
       return coordinates;
@@ -413,6 +402,27 @@ class boardClass {
         resetCoord();
       }
     }
+    bool setCoordinates(int x, int y){
+      coordinates[0] = x; 
+      coordinates[1] = y;
+      if(validateCoord(coordinates) && board[coordinates[0]][coordinates[1]].hit != 'H' && board[coordinates[0]][coordinates[1]].hit != 'M'){
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+
+
+    
+    private: 
+    void emptyBoard(){
+      for(int xAxis = 0; xAxis <= boardCoordinates[0] - 1; xAxis++){
+        for(int yAxis = 0; yAxis <= boardCoordinates[1] - 1; yAxis++){
+          board[xAxis][yAxis] = {false, false, false};
+        }
+      }
+    }
     void mineExplosion(){
       int localCoord[] = { coordinates[0], coordinates[1] }; 
       updateCoordToNewCoord(localCoord, -1, -1);
@@ -424,6 +434,7 @@ class boardClass {
       updateCoordToNewCoord(localCoord, 1, 0);
       updateCoordToNewCoord(localCoord, 1, 1);
     }
+
     void updateCoordToNewCoord(int* localCoord, int xAxisMovement, int yAxisMovement){
       coordinates[0] += xAxisMovement;
       coordinates[1] += yAxisMovement;
@@ -434,16 +445,6 @@ class boardClass {
         coordinates[1] = localCoord[1];
         // when a mine hits another mine then it errors, that is because theres two of the same function running.
     }
-    bool setCoordinates(int x, int y){
-      coordinates[0] = x; 
-      coordinates[1] = y;
-      if(validateCoord(coordinates) && board[coordinates[0]][coordinates[1]].hit != 'H' && board[coordinates[0]][coordinates[1]].hit != 'M'){
-        return true;
-      } else {
-        return false;
-      }
-    }
-    private: 
 };
 
 //board.h
