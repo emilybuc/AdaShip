@@ -25,10 +25,7 @@ void oneVsComp(){
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on
 
-    cout << "\nComputers Turn\n\nComputers Board\n";
-    computerBoard.outputBoard();
-    cout << "\nTarget Board\n";
-    playersBoard.outputBoard();
+    cout << "\nComputers Turn\n";
     computerPlayer.shootMissile(playersBoard, notSalvoMode);
     endGame = isEndGame(playersBoard, computerBoard);
   	} while(endGame != true);
@@ -102,19 +99,17 @@ void oneVsCompSalvo(){
     getline(cin, input);
     //exit out of function if the game has been exited or won by the player before moving on
 
-    cout << "\nComputers Turn\n";
-    cout << "\nComputers Board\n";
-    computerBoard.outputBoard();
-    cout << "\nTarget Board\n";
-    playersBoard.outputBoard();
+    cout << "\n\bComputers Turn\n";
     int amountOfComputersMissiles = computerBoard.salvoMode();
-    cout << "The computer has (" << amountOfComputersMissiles << ") Missile(s)";
+    cout << "\nThe computer has (" << amountOfComputersMissiles << ") Missile(s)\n";
     while(amountOfComputersMissiles != 0){
       computerPlayer.shootMissile(playersBoard, salvoMode);
       endGame = isEndGame(playersBoard, computerBoard);
       if(endGame)break;
       amountOfComputersMissiles--;
     }
+    cout << "\nYour Updated Board\n";
+    computerBoard.outputBoard();
     cout << "\nEnter any key to finish the computers turn: ";
     getline(cin, input);
   	} while(endGame != true);
@@ -208,10 +203,7 @@ void oneVsCompMines(){
     if(endGame)break;
     //exit out of function if the game has been exited or won by the player before moving on
 
-    cout << "\nComputers Turn\n\nComputers Board\n";
-    computerBoard.outputBoard();
-    cout << "\nTarget Board\n";
-    playersBoard.outputBoard();
+    cout << "\nComputers Turn\n";
     computerPlayer.shootMissile(playersBoard, notSalvoMode);
     endGame = isEndGame(playersBoard, computerBoard);
   	} while(endGame != true);

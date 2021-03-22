@@ -8,6 +8,7 @@ class computerTargeting {
       bool hit;
     };
     vector <coordinates> coordOfhit;
+    int timesHit;
 
     void setCoordOfHit(coordinates coordinateToAdd){
       coordOfhit.push_back({ coordinateToAdd });
@@ -17,6 +18,7 @@ class computerTargeting {
   computerTargeting(){
     setCoordOfHit({ 0, 0, false });
     //Initalise one value so the if statement doesnt error
+    timesHit = 0;
   }
   void shootMissile(boardClass &board, bool salvoMode){
     if(coordOfhit[coordOfhit.size() - 1].hit){
@@ -32,11 +34,14 @@ class computerTargeting {
       cout << "\nComputers missile hit!\n";
       } else {
       setCoordOfHit({ localCoords[0], localCoords[1], false });
-      cout << "\nComputers missile missed\n";
+      cout << "\nComputers missile missed!\n";
     }
+
     string endTurn;
     if(!salvoMode){
-      cout << "Enter any key to finish the computers turn: ";
+      cout << "\nYour Updated Board\n";
+      board.outputBoard();
+      cout << "\nEnter any key to finish the computers turn: ";
       getline(cin, endTurn);
     }
   }
@@ -48,12 +53,16 @@ class computerTargeting {
     int xMovement = directions[randomDirection][0]; 
     int yMovement = directions[randomDirection][1]; 
 
-    int x = coordOfhit[coordOfhitSize].x += xMovement;
-    int y = coordOfhit[coordOfhitSize].y += yMovement;
+    int x = coordOfhit[coordOfhitSize].x + xMovement;
+    int y = coordOfhit[coordOfhitSize].y + yMovement;
 
     if(board.setCoordinates(x, y)){
       return;
+    } else if (timesHit == 4) {
+      board.randomCoordinates();
+      //All squares around the hit tile have already been hit try a random coordinate
     } else {
+      timesHit++;
       seekTarget(board);
     }
   }
