@@ -238,6 +238,54 @@ int getIntFromFile(stringstream& lineStream, char delimiter){
 I dealt with code smells like code being duplicated by refactoring and making helper functions if I was performing the same action more than once. The function above shows getting a line from a stringstream, assigning it to a variable and breaking it on a delimiter; once that was done I converted it into an integer. this function was performed on different classes multiple times so it made sense to make a helper function to do this.
 
 ### Implementation and effective use of advanced programming principles (with examples)
+I used pointers in my implementation so that when i was passing in arguments I was referring to the original class or string stream. This is important when dealing with the state of a class as you may use a function to update a class but those changes wouldnt carry over as you havent passed in a pointer.
+```
+  void seekTarget(boardClass &board, int coordOfHitIndex)
+```
+I also followed the state design pattern when designing the board structure, i had a struct inside each of the board coordinates which kept the state of each tile. when this function is called (below) it checks if the coordinates that have been entered have a boat or a mine, if it does then it updates the state of that tile to 'H' for hit. Now that the state has been updated other functions will perform differently; for example the output board function will now output a H on that tile.
+```
+    bool setHit(){
+      if(board[coordinates[0]][coordinates[1]].hasBoat && board[coordinates[0]][coordinates[1]].hasMine){ //use the coordinates array to find the coordinates on the board
+        board[coordinates[0]][coordinates[1]].hit = 'H';
+        //set the tile to = H
+        tilesToHit--;
+        //reduce this value so we know when the game ends
+        mineExplosion();
+        //call for the mine explosion function
+        resetCoord();
+        //reset the coordinates
+        return true;
+      } else if(board[coordinates[0]][coordinates[1]].hasMine){
+        board[coordinates[0]][coordinates[1]].hit = 'H';
+        //set tile to hit
+        mineExplosion();
+        //call for mine function
+        resetCoord();
+        return true;
+      } else if(board[coordinates[0]][coordinates[1]].hasBoat){
+        board[coordinates[0]][coordinates[1]].hit = 'H';
+        //if the tile has a boat then set the tile to H for hit
+        tilesToHit--; //minus the amount of tiles that need to be hit
+        resetCoord();
+        return true;
+      } else {
+        board[coordinates[0]][coordinates[1]].hit = 'M';
+        //if none of these things are true then the missile has missed
+        resetCoord();
+        return false;
+      }
+    }
+```
 ### Features showcase and embedded innovations (with examples) oppportunity to highlight best bits
-### Improved targetting algorithm - research, design, implementation and tested confirmation with examples
-### Relfective review, opportunies to imporve and continued professional development
+My favourite innovation within my project was using structs inside the 2d vector, this is something I wanted to do from the start. Even though there were simpler options including using numbers to store the state, I think this makes my code a lot easier to read. I also think storing the whole state for the game inside one class made it easier to manage.
+```
+    struct tile {
+      char hit;
+      char hasBoat;
+      bool hasMine;
+    };
+```
+
+### Improved targeting algorithm - research, design, implementation and tested confirmation with examples
+![Flow Diagram](targetingAlgorithm.png)
+### Relfective review, opportunies to improve and continued professional development
