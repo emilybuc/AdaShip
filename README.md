@@ -114,16 +114,129 @@ Changes - I started from the newest coordinates first so i can try seek out boat
 
 
 ### Ensuring quality through testing and resolving bugs
-I test my code often and make sure to type in any eronous inputs that the user may type in, like letters instead of numbers or very large inputs. This is called edge testing, I also make sure 
+I test my code often and make sure to type in any eronous inputs that the user may type in, like letters instead of numbers or very large inputs. This is called edge testing. This ensures my code is as robust as it can be. 
+I ran into a few bugs, including having swapped around the x and y coordinates at one point which caused strange functionality. 
+another bug caused boats to be placed even if some of it was outside the board or overlapping another boat, this was because my function places the ship one tile at a time and only checks on each tile so half of the boat would be placed, I then implemented a checking loop before actually placing it so I knew if the boat could be placed.
 
 ### Reflection on key design challenges innovations and how I solved them
-
-
+The main design challenges came with placing the boats as there were three elements I needed to take into consideration when trying to place a boat, whether or not there is already a boat where the user is trying to place a new one, is some of the boat outside of the board and how do I take the users coordinate input and output a coordinate that my software can use. 
+The innovations that I came up with were to place a struct inside my 2d vector so I could manage the state of each tile, this made it really easy to understand when reading my code if i was checking if there was a boat inside my tile. 
+The way I broke the input string up into two strings before converting it made it so much simpler especially when dealing with double alpha characters.
+I also had to come up with a few ways to stop users from being able to change the config to add in too many boats, my first solution was to check the area of the board and count up the amount of tiles the boats occupied, if there was too many boats by area then exit the program. The second way was to allow the user to carry on with the game if they werent able to place all their ships. As it is almost impossible to place the boats in the perfect way to fit them onto the board they may not be able to place the last ships. With the autoplace I implemented a retry 100 times before giving up placing, I chose this large number to give the computer enough time to try and place it in the remaining space. If i didnt do this the autoplace ships would infinantly try and place the ships when there is no more space left.
 
 
 
 ## Evaluation
 ### Analysis with embedded examples of key code refactoring, reuse, smells
+I refactored my validateInput function from: 
+```
+bool validateInput(string input){
+      int convertCharToCoord = 65;
+      int convertIntToCoord = 48;
+      for (int i = 0; i < input.size(); i++){
+        if(isalpha(input[i])){
+          cout << input[i] << endl;
+          int uppercaseChar = toupper(input[i]);
+          coordinates[0] += (uppercaseChar - convertCharToCoord);
+        } else if(isdigit(input[i])){
+          if(isdigit(input[i + 1])){
+            int firstDigit = convertArrayToInt(input[i]) * 10;
+            int secondDigit = convertArrayToInt(input[i + 1]);
+            int finalNum = (firstDigit + secondDigit);
+            coordinates[1] = finalNum - 1;
+            break;
+          } else {
+            coordinates[1] = convertArrayToInt(input[i]) - 1;
+          }
+        } else {
+          resetCoord();
+          return false;
+        }
+      }
+      cout << coordinates[0] << ", " << coordinates[1] << endl;
+      if(validateCoord(coordinates)){
+        return true;
+      } else {
+        resetCoord();
+        return false;
+      }
+    }
+``` 
+To: 
+```
+    bool validateInput(string input){
+      int convertCharToCoord = 65;
+      //if you minus 65 from a char you will get the coordinates on the board
+      string xCoord, yCoord;
+      for (int i = 0; i < input.size(); i++){
+        if(isalpha(input[i])){
+          xCoord += input[i];
+          //if the character is a letter then add it to this string, im splitting up the letters from numbers
+        } else if(isdigit(input[i])){
+          yCoord += input[i];
+          //if the character is a number add it to this string
+        } else {
+          resetCoord();
+          //if theyve inputted a special character return false and tell the user to input a correct coordinate
+          return false;
+        }
+      }
+
+      int xCoordInt = 0;
+      xCoord = convertToUpper(xCoord);
+      //convert this to uppercase
+
+      for (int i = 0 ; i < xCoord.length(); i++){ // loop through xCoord
+        if(xCoord.length() == 1){ //if the input only as one alpha digit just convert to coordinate
+          xCoordInt = (xCoord[i] - convertCharToCoord);
+
+        } else if (xCoord.length() == 2){ // if the letter part of the coordinate is double digits
+          switch (i){
+            case 0: // loop through each character of the string
+             if(xCoord[i] == 'A'){
+               xCoordInt += 26; //if character 1 is an A then add 26 to get the coordinates
+             } else if (xCoord[i] == 'B'){
+               xCoordInt += 52; //if character 1 is an A then add 52 to get the coordinates
+             } else if (xCoord[i] == 'C'){
+               xCoordInt += 78; //if character 1 is an A then add 78 to get the coordinates
+             }
+              break;
+            case 1:
+              xCoordInt += (xCoord[i] - convertCharToCoord); //add the second character onto the first one to get the final coordinate
+              break;
+          }
+        } else {
+          return false; //if there is no alpha characters in the coordinate then it is incorrect
+        }
+      }
+      coordinates[0] = xCoordInt; //set the x coordinate
+      coordinates[1] = stoi(yCoord) - 1; // convert the number portion of the coordinate to a number and minus 1 to get the coordinate
+
+      if(validateCoord(coordinates)){
+        //validate the coordinate to check it hasnt got a boat and is inside the board
+        return true;
+      } else {
+        resetCoord();
+        //if not then reset the coordinate variable and return false
+        return false;
+      }
+    }
+```
+This worked way better as instead of converting each digit into a number and trying to figure out when there was a double digit, if i dealt with the number portion of the input as a string before converting it I wouldnt have to worry about adding them together.
+I was also able to reuse this function to place the boats as well as take a coordinate for where the user wanted to fire a missile as it checked all of the same parameters for both. 
+
+```
+int getIntFromFile(stringstream& lineStream, char delimiter){
+  string value;
+  getline(lineStream, value, delimiter);
+  //the value from before the delimiter
+  int convertedToInt = stoi(value);
+  //convert it to an int
+  return convertedToInt;
+}
+```
+I dealt with code smells like code being duplicated by refactoring and making helper functions if I was performing the same action more than once. The function above shows getting a line from a stringstream, assigning it to a variable and breaking it on a delimiter; once that was done I converted it into an integer. this function was performed on different classes multiple times so it made sense to make a helper function to do this.
+
 ### Implementation and effective use of advanced programming principles (with examples)
 ### Features showcase and embedded innovations (with examples) oppportunity to highlight best bits
 ### Improved targetting algorithm - research, design, implementation and tested confirmation with examples
