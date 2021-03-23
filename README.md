@@ -59,7 +59,7 @@ I should also try and avoid hard coding as the amount of ships may change and th
 
 When reading through my code I should also be mindful of code smells, this could indicate that my code needs to be refactored, if a function is getting too large or if im repeating lines these are indications that my code needs to be refactored.
 
-### Phase 1 development 
+### Development
 tasks, code review and changes 
 
 Epic - Getting data from the config file and set-up of the board
@@ -89,13 +89,33 @@ Task - outputting the board dynamically
 Task - Taking in larger coordinates ie AA and BA 
 Code Review - change the name of the variable used to change the letter coordinates into number ones as its a bit confusing what I was doing with the variable 
 Changes - I changed the variable to be called 'convertCharToCoord'
+
 Epic - Salvo mode
+Task - Create a function that counts up the amount of boats still left on the board and returns back an int of the amount of boats left, i will then call for the shoot missile function as many times as there is boats left.
+Code review - the way I am counting ships will not work when additional ships can be added
+Changes - I could not make the changes to the function 
+
 Epic - Unlimited additional boats
+I had to add validation to check how many boats could be fit onto a given board so they couldn't add in too many boats. I also added that the autoplace function can only try and place a boat 100 times before it outputted a message saying it couldnt place anymore boats. This is because the computer may not place the boats efficiently enough to fit them all on the board, this allows the game to carry on.
+Code review - They noted that if the user didn't place the boats in an efficient way then they would not be able to place the maximum amount of boats onto the board.
+Changes - I added an option to the menu for stop placing boats so the user could use that if they cant fit any more boats onto their board.
+
 Epic - Hidden mines
+Task - Add in a function to randomly place 5 mines onto the board 
+Task - Add the functionallity to the missile function to check if there are mines on the tile that is hit
+Task - Add a function to hit all tiles around the mine
+Code review - 
+
 Epic - Improved computer targeting
+Task - Finding a way to store any previous hits 
+Task - Creating a function that will hit the 4 spots around a tile to see if it will hit another ship
+Code Review - Looping through the coordinates from oldest to newest, I should do it the other way around
+Changes - I started from the newest coordinates first so i can try seek out boats easier.
 
 
 ### Ensuring quality through testing and resolving bugs
+I test my code often and make sure to type in any eronous inputs that the user may type in, like letters instead of numbers or very large inputs. This is called edge testing, I also make sure 
+
 ### Reflection on key design challenges innovations and how I solved them
 
 
