@@ -18,11 +18,13 @@ bool playerShootMissile(boardClass &board, bool salvoMode = false){
       //Not sure this works
         loop = false;
         return true;
-    } else if (!board.validateInput(input)){
-        cout << "That coordinate isnt valid, please retry";
-        return false;
-        //ask them to retry
+    } else if (board.validateInput(input)){
+      loop = false;
+    } else {
+      cout << "\nThat coordinate isnt valid, please retry\n";
+      //ask them to retry
     }
+  }
     if(board.setHit()){
       cout << "\nYour missile hit!\n";
       //if sethit is true then the missile hit
@@ -35,8 +37,6 @@ bool playerShootMissile(boardClass &board, bool salvoMode = false){
       getline(cin, input);
       //take input 
     }
-    loop = false;
-  }
   return false;
 }
 
