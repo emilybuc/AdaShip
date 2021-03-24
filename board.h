@@ -196,7 +196,6 @@ class boardClass {
           return false;
         }
       }
-
       int xCoordInt = 0;
       xCoord = convertToUpper(xCoord);
       //convert this to uppercase
@@ -225,7 +224,12 @@ class boardClass {
         }
       }
       coordinates[0] = xCoordInt; //set the x coordinate
-      coordinates[1] = stoi(yCoord) - 1; // convert the number portion of the coordinate to a number and minus 1 to get the coordinate
+      if(!yCoord.empty()){
+        coordinates[1] = stoi(yCoord) - 1; // convert the number portion of the coordinate to a number and minus 1 to get the coordinate
+      } else {
+        return false;
+        //this errored before when you just enter in the xaxis part of the coordinate
+      }
 
       if(validateCoord(coordinates)){
         //validate the coordinate to check it hasnt got a boat and is inside the board
@@ -500,23 +504,27 @@ class boardClass {
     }
     string yOrN(){
       string inputTryAgain; 
+      bool loop = true;
+      //asking for Y/N input
+      while(loop == true){
       cout << "\nAre you happy with this placement? Please type Y/N: ";
       getline(cin, inputTryAgain);
-      //asking for Y/N input
-      if(inputTryAgain == "Y" || inputTryAgain == "y"){
-        return "0";
-        //If yes then exit and go 
-      } else if (inputTryAgain == "N" || inputTryAgain == "n"){
-        cout << "Ok, please retry placing boats\n";
-        resetBoard();
-        return "-1";
-        //exit
-      } else {
-        cout << "invalid input, try again \n";
-        yOrN();
-        //fall back if they enter something else
+        if(inputTryAgain == "Y" || inputTryAgain == "y"){
+          return "0";
+          loop = false;
+          //If yes then exit and go 
+        } else if (inputTryAgain == "N" || inputTryAgain == "n"){
+          cout << "Ok, please retry placing boats\n";
+          resetBoard();
+          return "-1";
+          //exit
+        } else {
+          cout << "invalid input, try again \n";
+          //fall back if they enter something else
+        }
       }
       return "-1";
+      //fall back
     }
 
     void mineExplosion(){
@@ -546,6 +554,6 @@ class boardClass {
       coordinates[1] = localCoord[1];
       //change the coordinates back to the original coordinates for the next function call
 
-      // when a mine hits another mine then it errors, that is because theres two of the same function running, I did not have enough time to fix this
+      // when a mine hits another mine then it errors, that is because theres two of the same function running, I did not have enough time to fix this. I would have implemented multiple threads of the function so they could run concurrently, or async 
     }
 };

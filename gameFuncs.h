@@ -14,6 +14,7 @@ bool playerShootMissile(boardClass &board, bool salvoMode = false){
     if(input == "a" || input == "A"){
       //random coordinates if they input A
       board.randomCoordinates();
+      loop = false;
     } else if (input == "q" || input == "Q"){
       //Not sure this works
         loop = false;
