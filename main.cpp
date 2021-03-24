@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include "colours.h"
 using namespace std;
 
 int getIntFromFile(stringstream& lineStream, char delimiter);
@@ -24,7 +25,7 @@ int main() {
 void menu(void) {
 	string choice = "-1"; //declare and initialise an integer type variable
 	do { //set up a continuous loop
-		cout << "\nAdaShip! not like battleships in anyway:\n";
+		cout << C_CYAN << "\n\t\t\t╔═╗┌┬┐┌─┐┌─┐┬ ┬┬┌─┐\n\t\t\t╠═╣ ││├─┤└─┐├─┤│├─┘\n\t\t\t╩ ╩─┴┘┴ ┴└─┘┴ ┴┴┴ \n" << C_RESET;
 		cout << "\t1. One player v computer game\n";
     cout << "\t2. Two player game\n";
     cout << "\t3. One player v computer game (salvo)\n";

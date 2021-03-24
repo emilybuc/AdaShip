@@ -57,47 +57,47 @@ class boardClass {
           if(i <= 25){
             letter = letter + i;
             //if the letters are only between A-Z just output these
-            cout << "\t" << letter;
+            cout << C_CYAN << "\t" << letter << C_RESET;
           } else if(i <= 51){
             int variation = i - 26;
             // this restart at A for the second letter
             letter = letter + variation;
-            cout << "  A" << letter;
+            cout << C_GREEN << "  A" << letter << C_RESET;
             //add an A to the start of the reference
           } else if(i <= 77){
             int variation = i - 52;
             //take away 52 to get back to the letter A
             letter = letter + variation;
-            cout << "  B" << letter;
+            cout << C_MAGENTA << "  B" << letter << C_RESET;
              //add a B to the start of the reference
           } else if(i <= 103){
             int variation = i - 78;
             //take away 78 to get back to the letter A
             letter = letter + variation;
-            cout << "  C" << letter;
+            cout << C_RED << "  C" << letter << C_RESET;
             //add a C to the start of the reference
           }
       }
       cout << endl;
       for (int i = 0; i < board.size(); i++){
         int rowNumbers = i + 1;
-        cout << setw(2) << rowNumbers;
+        cout << C_MAGENTA << setw(2) << rowNumbers << C_RESET;
         //first set the row number
         for (int j = 0; j < board[i].size(); j++){
            if (board[j][i].hit == 'H'){
-            cout << "\t" << board[j][i].hit;
+            cout << C_RED << "\t" << board[j][i].hit << C_RESET;
             //if the tile has been hit then display H
           } else if (board[j][i].hit == 'M'){
-            cout <<"\t" << board[j][i].hit;
+            cout << C_CYAN << "\t" << board[j][i].hit << C_RESET;
             //if the tile has been hit but there was no ship then display M
           } else if (board[j][i].hasBoat && board[j][i].hasMine == true){
-            cout << "  " << board[j][i].hasBoat << "/Ø";
+            cout << C_GREEN << "  " << board[j][i].hasBoat << C_RESET << C_RED << "/Ø" << C_RESET;
             //if the tile has a boat and a mine then display the boat character and the mine character
           } else if (board[j][i].hasBoat){
-            cout <<"\t" << board[j][i].hasBoat;
+            cout  << C_GREEN <<"\t" << board[j][i].hasBoat << C_RESET;
             //display boat character
           } else if (board[j][i].hasMine == true){
-            cout << "\t" << "Ø" << setw(2);
+            cout << C_RED << "\t" << "Ø" << setw(2) << C_RESET;
             //display mine character
           } else {
             cout << "\t" << "-" ;
@@ -108,7 +108,7 @@ class boardClass {
       }
     }
 
-    void setBoatsMenu(){
+    bool setBoatsMenu(){
       string input = "-1"; //declare and initialise an integer type variable
 	    do { //set up a continuous loop
         cout << "\nPlease choose from the following options\n1. Set boats manually\n2. Automatically set boats \n0. Quit\n\nOption: ";
@@ -139,8 +139,8 @@ class boardClass {
                   cout << "\nResetting board...\n";
                   resetBoard();
                 } else if(input == "0"){
-                  cout << "\nQuitting...\nGoodbye\n"; 
-                  exit(0);
+                  cout << "\nQuitting...\n"; 
+                  return true;
                   //quitting the game
                 } else if (validateInput(input)){
                   //if they have put a valid coordinate in then ask them where they want the rest of their boat
@@ -168,7 +168,7 @@ class boardClass {
               outputBoard();
               input = yOrN();
               break;
-            case 0: cout << "\nQuitting...\nGoodbye\n"; exit(0); break;
+            case 0: cout << "\nQuitting...\n"; return true; break;
             default:
                 cout << "\n'" << input << "' Is an invalid option  - please try again.";
                 break;
@@ -177,6 +177,7 @@ class boardClass {
           cout << "\n'" << input << "' Is an invalid option  - please try again.\n"; 
         } //error handling
       } while(input != "0");
+      return false;
     }
     
     bool validateInput(string input){
