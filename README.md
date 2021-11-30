@@ -1,8 +1,4 @@
-# AdaShip
-
-Replit link : https://replit.com/join/qnxvagko-emilybuck
-github link: https://github.com/emilybuc/AdaShip
-
+# Battleships
 
 ## Challenge Outline
 
